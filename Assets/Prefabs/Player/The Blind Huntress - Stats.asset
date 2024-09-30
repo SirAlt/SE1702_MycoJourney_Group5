@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dab54491e5d161c48bc87732edf3974b, type: 3}
+  m_Name: The Blind Huntress - Stats
+  m_EditorClassIdentifier: 
+  TerrainLayers:
+    serializedVersion: 2
+    m_Bits: 128
+  CollisionOffset: 0.03
+  FloorOffset: 0.031
+  CeilingOffset: 0.06
+  WallOffset: 0.035
+  MaxHorizontalSpeed: 3.5
+  HorizontalAcceleration: 9999
+  GroundDeceleration: 9999
+  AirDeceleration: 9999
+  GravitationalAcceleration: 65
+  MaxFallSpeed: 15
+  JumpPower: 9.2
+  JumpAcceleration: 0
+  JumpAccelerationDuration: 0.08
+  JumpEndEarlyGravityModifier: 3.5
+  JumpEndEarlyWindow: 0.14
+  JumpBuffer: 0.12
+  JumpRefractoryPeriod: 0.04
+  CoyoteTime: 0.12
+  ApexThreshold: 8
+  ApexAccelerationBonus: 60
+  ApexAntiGravityBonus: 25
+  GroundingVelocity: 0
