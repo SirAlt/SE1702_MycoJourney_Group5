@@ -10,24 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dab54491e5d161c48bc87732edf3974b, type: 3}
-  m_Name: The Blind Huntress - Stats
+  m_Name: BlindHuntressStats
   m_EditorClassIdentifier: 
-  TerrainLayers:
+  TerrainLayer:
     serializedVersion: 2
     m_Bits: 128
+  BoundaryLayer:
+    serializedVersion: 2
+    m_Bits: 1048576
   CollisionOffset: 0.03
-  FloorOffset: 0.031
-  CeilingOffset: 0.06
-  WallOffset: 0.035
   MaxHorizontalSpeed: 3.5
   HorizontalAcceleration: 9999
   GroundDeceleration: 9999
   AirDeceleration: 9999
-  GravitationalAcceleration: 65
-  MaxFallSpeed: 15
-  JumpPower: 9.2
+  GravitationalAcceleration: 60
+  MaxFallSpeed: 10
+  JumpPower: 9.5
   JumpAcceleration: 0
-  JumpAccelerationDuration: 0.08
+  JumpAccelerationDuration: 0.06
   JumpEndEarlyGravityModifier: 3.5
   JumpEndEarlyWindow: 0.14
   JumpBuffer: 0.12

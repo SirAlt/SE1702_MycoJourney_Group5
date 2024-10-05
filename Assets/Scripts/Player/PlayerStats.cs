@@ -3,27 +3,6 @@
 [CreateAssetMenu]
 public class PlayerStats : ScriptableObject
 {
-    [Header("Collision")]
-    [Tooltip("Layer(s) terrain and obstacles are on.")]
-    public LayerMask TerrainLayers;
-
-    [Range(0f, 0.5f)]
-    [Tooltip("Offset for calculating collisions when applying movement.")]
-    public float CollisionOffset;
-
-    [Range(0f, 0.5f)]
-    [Tooltip("How far above the ground the character stands.")]
-    public float FloorOffset;
-
-    [Range(0f, 0.5f)]
-    [Tooltip("How far below an obstacle the character stops and loses all upward velocity.")]
-    public float CeilingOffset;
-
-    [Range(0f, 0.5f)]
-    [Tooltip("The distance at which the character is considered to be touching a wall. Useful for abilities like wallgrab, wallslide, and walljump.")]
-    public float WallOffset;
-
-
     [Header("Movement")]
     [Tooltip("Maximum horizontal movement speed.")]
     public float MaxHorizontalSpeed;
