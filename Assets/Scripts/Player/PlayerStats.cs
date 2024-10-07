@@ -3,36 +3,23 @@
 [CreateAssetMenu]
 public class PlayerStats : ScriptableObject
 {
-    [Header("Collision")]
-    [Tooltip("Layer(s) terrain and obstacles are on.")]
-    public LayerMask TerrainLayers;
-
-    [Range(0f, 0.5f)]
-    [Tooltip("Offset for calculating collisions when applying movement.")]
-    public float CollisionOffset;
-
-    [Range(0f, 0.5f)]
-    [Tooltip("How far above the ground the character stands.")]
-    public float FloorOffset;
-
-    [Range(0f, 0.5f)]
-    [Tooltip("How far below an obstacle the character stops and loses all upward velocity.")]
-    public float CeilingOffset;
-
-    [Range(0f, 0.5f)]
-    [Tooltip("The distance at which the character is considered to be touching a wall. Useful for abilities like wallgrab, wallslide, and walljump.")]
-    public float WallOffset;
-
-
-    [Header("Movement")]
-    [Tooltip("Maximum horizontal movement speed.")]
-    public float MaxHorizontalSpeed;
+    [Header("Ground Movement")]
+    [Tooltip("Maximum horizontal movement speed on the ground.")]
+    public float MaxGroundSpeed;
 
     [Tooltip("How fast the character gains horizontal movement speed.")]
-    public float HorizontalAcceleration;
+    public float GroundAcceleration;
 
     [Tooltip("How fast the character's horizontal movement stops while on the ground.")]
     public float GroundDeceleration;
+
+
+    [Header("Air Movement")]
+    [Tooltip("Maximum horizontal movement speed in the air.")]
+    public float MaxAirSpeed;
+
+    [Tooltip("How fast the character gains horizontal movement speed.")]
+    public float AirAcceleration;
 
     [Tooltip("How fast the character's horizontal movement stops while in the air.")]
     public float AirDeceleration;
@@ -51,11 +38,11 @@ public class PlayerStats : ScriptableObject
     public float JumpPower;
 
     [Tooltip("Continual upward acceleration applied during the beginning portion of a jump.")]
-    public float JumpAcceleration;
+    public float InitialJumpAcceleration;
 
     [Range(0f, 2f)]
     [Tooltip("The amount of time upward acceleration is in effect. Gravity is ignored during this time.")]
-    public float JumpAccelerationDuration;
+    public float InitialJumpPeriod;
 
 
     [Header("Variable Jump Height")]
@@ -94,4 +81,26 @@ public class PlayerStats : ScriptableObject
     [Range(0f, 10f)]
     [Tooltip("Constant downward velocity applied while on the ground. Helps on slopes.")]
     public float GroundingVelocity;
+
+
+    [Header("Wall Jump")]
+    [Tooltip("The amount of time the character is locked in animation at the start of a wall jump.")]
+    public float WallJumpLockinTime;
+
+    [Tooltip("Length of the period of time where the character strictly follows a wall jump's path, ignoring gravity. Can be interrupted by ending the jump early.")]
+    public float WallJumpKickawayPeriod;
+
+
+    [Header("Dash")]
+    [Tooltip("The speed at which the character moves during a dash.")]
+    public float DashSpeed;
+
+    [Tooltip("The length in time of a dash.")]
+    public float DashDuration;
+
+    [Tooltip("The amount of time a dash is buffered. This allows dash input before actually hitting the ground.")]
+    public float DashBuffer;
+
+    [Tooltip("The time window for cutting a dash short. Past this point, the dash will go full distance even if the dash key is released.")]
+    public float DashEndEarlyWindow;
 }
