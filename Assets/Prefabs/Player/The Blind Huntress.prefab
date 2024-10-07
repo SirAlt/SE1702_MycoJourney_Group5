@@ -292,9 +292,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc277e70e8cbd3f4ba27e52e692abe09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Stats>k__BackingField: {fileID: 11400000, guid: 0f7615d53c83960458dc3f9bb5007677, type: 2}
+  <Abilities>k__BackingField: {fileID: 11400000, guid: 774210a062d22af4c9fc801fae8ecca5, type: 2}
   <MaxHealth>k__BackingField: 100
-  _stats: {fileID: 11400000, guid: 0f7615d53c83960458dc3f9bb5007677, type: 2}
-  _abilities: {fileID: 11400000, guid: 774210a062d22af4c9fc801fae8ecca5, type: 2}
+  FrameVelocity: {x: 0, y: 0}
 --- !u!114 &5103759520306719172
 MonoBehaviour:
   m_ObjectHideFlags: 0

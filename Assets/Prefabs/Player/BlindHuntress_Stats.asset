@@ -10,30 +10,31 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dab54491e5d161c48bc87732edf3974b, type: 3}
-  m_Name: BlindHuntressStats
+  m_Name: BlindHuntress_Stats
   m_EditorClassIdentifier: 
-  TerrainLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  BoundaryLayer:
-    serializedVersion: 2
-    m_Bits: 1048576
-  CollisionOffset: 0.03
-  MaxHorizontalSpeed: 3.5
-  HorizontalAcceleration: 9999
+  MaxGroundSpeed: 3.5
+  GroundAcceleration: 9999
   GroundDeceleration: 9999
+  MaxAirSpeed: 3.5
+  AirAcceleration: 9999
   AirDeceleration: 9999
   GravitationalAcceleration: 60
   MaxFallSpeed: 10
   JumpPower: 9.5
-  JumpAcceleration: 0
-  JumpAccelerationDuration: 0.06
+  InitialJumpAcceleration: 0
+  InitialJumpPeriod: 0.06
   JumpEndEarlyGravityModifier: 3.5
-  JumpEndEarlyWindow: 0.14
-  JumpBuffer: 0.12
-  JumpRefractoryPeriod: 0.04
+  JumpEndEarlyWindow: 0.12
+  JumpBuffer: 0.1
+  JumpRefractoryPeriod: 0.06
   CoyoteTime: 0.12
   ApexThreshold: 8
   ApexAccelerationBonus: 60
   ApexAntiGravityBonus: 25
   GroundingVelocity: 0
+  WallJumpLockinTime: 0.02
+  WallJumpKickawayPeriod: 0.08
+  DashSpeed: 6
+  DashDuration: 1
+  DashBuffer: 0.1
+  DashEndEarlyWindow: 0.8

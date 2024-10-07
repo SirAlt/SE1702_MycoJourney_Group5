@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[DefaultExecutionOrder(-900)]
+[DefaultExecutionOrder(-100)]
 [RequireComponent(typeof(Collider2D))]
 public class BodyContacts : MonoBehaviour
 {
@@ -33,27 +33,27 @@ public class BodyContacts : MonoBehaviour
         Physics2D.queriesStartInColliders = _cachedQueryStartInColliders;
     }
 
-    public bool IsTouchingGround { get; private set; }
-    public bool IsTouchingCeiling { get; private set; }
-    public bool IsTouchingWallLeft { get; private set; }
-    public bool IsTouchingWallRight { get; private set; }
+    public bool Ground { get; private set; }
+    public bool Ceiling { get; private set; }
+    public bool WallLeft { get; private set; }
+    public bool WallRight { get; private set; }
 
-    public bool IsTouchingWall => IsTouchingWallLeft || IsTouchingWallRight;
+    public bool Wall => WallLeft || WallRight;
 
     private void CheckGround()
     {
-        IsTouchingGround = _collider.Cast(Vector2.down, _filter, _hits, _config.GroundContactDistance) > 0;
+        Ground = _collider.Cast(Vector2.down, _filter, _hits, _config.GroundContactDistance) > 0;
     }
 
     private void CheckCeiling()
     {
-        IsTouchingCeiling = _collider.Cast(Vector2.up, _filter, _hits, _config.CeilingContactDistance) > 0;
+        Ceiling = _collider.Cast(Vector2.up, _filter, _hits, _config.CeilingContactDistance) > 0;
     }
 
     private void CheckWall()
     {
-        IsTouchingWallRight = _collider.Cast(Vector2.right, _filter, _hits, _config.WallContactDistance) > 0;
-        IsTouchingWallLeft = _collider.Cast(Vector2.left, _filter, _hits, _config.WallContactDistance) > 0;
+        WallRight = _collider.Cast(Vector2.right, _filter, _hits, _config.WallContactDistance) > 0;
+        WallLeft = _collider.Cast(Vector2.left, _filter, _hits, _config.WallContactDistance) > 0;
     }
 
 #if UNITY_EDITOR

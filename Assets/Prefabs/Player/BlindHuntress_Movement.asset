@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f6304688fa3e26e4284b05b0a15da163, type: 3}
-  m_Name: BlindHuntressMovement
+  m_Name: BlindHuntress_Movement
   m_EditorClassIdentifier: 
   TerrainLayer:
     serializedVersion: 2

@@ -17,7 +17,17 @@ public class SmoothTileMovement : MonoBehaviour, IMovementStrategy
         _hits = new();
     }
 
-    public Rigidbody2D Rb { private get; set; }
+
+    private Rigidbody2D _rb;
+    public Rigidbody2D Rb
+    {
+        set
+        {
+            _rb = value;
+            _rb.simulated = true;
+            _rb.bodyType = RigidbodyType2D.Kinematic;
+        }
+    }
 
     public void Move(Vector2 velocity)
     {
@@ -36,7 +46,7 @@ public class SmoothTileMovement : MonoBehaviour, IMovementStrategy
             var xStep = velocity.x * Time.fixedDeltaTime;
             if (xStep == 0) return;
 
-            bool terrainHit = Rb.Cast(Vector2.right * Mathf.Sign(xStep), _filter, _hits, Mathf.Abs(xStep) + _config.CollisionOffset) > 0;
+            bool terrainHit = _rb.Cast(Vector2.right * Mathf.Sign(xStep), _filter, _hits, Mathf.Abs(xStep) + _config.CollisionOffset) > 0;
 
             // TODO: Slopes - TRY: RaycastHit2D.Normal
 
@@ -55,7 +65,7 @@ public class SmoothTileMovement : MonoBehaviour, IMovementStrategy
                 xStep = Mathf.Max(closestDistance - _config.CollisionOffset, 0) * Mathf.Sign(xStep);
             }
 
-            Rb.position = new Vector2(Rb.position.x + xStep, Rb.position.y);
+            _rb.position = new Vector2(_rb.position.x + xStep, _rb.position.y);
         }
 
         void StepY()
@@ -63,7 +73,7 @@ public class SmoothTileMovement : MonoBehaviour, IMovementStrategy
             var yStep = velocity.y * Time.fixedDeltaTime;
             if (yStep == 0) return;
 
-            bool terrainHit = Rb.Cast(Vector2.up * Mathf.Sign(yStep), _filter, _hits, Mathf.Abs(yStep) + _config.CollisionOffset) > 0;
+            bool terrainHit = _rb.Cast(Vector2.up * Mathf.Sign(yStep), _filter, _hits, Mathf.Abs(yStep) + _config.CollisionOffset) > 0;
 
             if (terrainHit)
             {
@@ -80,14 +90,14 @@ public class SmoothTileMovement : MonoBehaviour, IMovementStrategy
                 yStep = Mathf.Max(closestDistance - _config.CollisionOffset, 0) * Mathf.Sign(yStep);
             }
 
-            Rb.position = new Vector2(Rb.position.x, Rb.position.y + yStep);
+            _rb.position = new Vector2(_rb.position.x, _rb.position.y + yStep);
         }
     }
 
     private Bounds GetBounds()
     {
         var colliders = new List<Collider2D>();
-        _ = Rb.GetAttachedColliders(colliders);
+        _ = _rb.GetAttachedColliders(colliders);
 
         if (colliders.Count > 0)
         {
@@ -98,7 +108,7 @@ public class SmoothTileMovement : MonoBehaviour, IMovementStrategy
             }
             return bounds;
         }
-        return new Bounds(Rb.position, Vector3.zero);
+        return new Bounds(_rb.position, Vector3.zero);
     }
 
 #if UNITY_EDITOR

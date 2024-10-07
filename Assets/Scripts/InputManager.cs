@@ -1,16 +1,24 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
-[DefaultExecutionOrder(-1000)]
+// We need this to execute late so its FixedUpdate can clear the recorded inputs
+// _after_ other scripts have had the chance to use them.
+[DefaultExecutionOrder(1337)]
 public class InputManager : MonoBehaviour
 {
     public static InputManager Instance { get; private set; }
 
-    public Vector2 MoveInput { get; private set; }
+    public Vector2 Move { get; private set; }
+
     public bool JumpPressedThisFrame { get; private set; }
     public bool JumpHeld { get; private set; }
+    public float TimeJumpWasPressed { get; private set; } = Mathf.NegativeInfinity;
+
     public bool SlashPressedThisFrame { get; private set; }
-    public bool DashPressed { get; private set; }
+
+    public bool DashPressedThisFrame { get; private set; }
+    public bool DashHeld { get; private set; }
+    public float TimeDashWasPressed { get; private set; } = Mathf.NegativeInfinity;
 
     private PlayerInput _playerInput;
 
@@ -50,10 +58,40 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
-        MoveInput = _moveAction.ReadValue<Vector2>();
-        JumpPressedThisFrame = _jumpAction.WasPressedThisFrame();
+        Move = _moveAction.ReadValue<Vector2>();
+
+        if (_jumpAction.WasPerformedThisFrame())
+        {
+            JumpPressedThisFrame = true;
+            TimeJumpWasPressed = Time.time;
+        }
         JumpHeld = _jumpAction.IsPressed();
+
         SlashPressedThisFrame = _slashAction.WasPressedThisFrame();
-        DashPressed = _dashAction.WasPressedThisFrame();
+
+        if (_dashAction.WasPerformedThisFrame())
+        {
+            DashPressedThisFrame = true;
+            TimeDashWasPressed = Time.time;
+        }
+        DashHeld = _dashAction.IsPressed();
+    }
+
+    private void FixedUpdate()
+    {
+        JumpPressedThisFrame = false;
+        DashPressedThisFrame = false;
+    }
+
+    public void ClearJump()
+    {
+        JumpPressedThisFrame = false;
+        TimeJumpWasPressed = Mathf.NegativeInfinity;
+    }
+
+    public void ClearDash()
+    {
+        DashPressedThisFrame = false;
+        TimeDashWasPressed = Mathf.NegativeInfinity;
     }
 }

@@ -9,13 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3754400c88b23294a88b527da97b3532, type: 3}
-  m_Name: BlindHuntressAbilities
+  m_Script: {fileID: 11500000, guid: 9f4a8143651c0db46ba3db285ff5be36, type: 3}
+  m_Name: BlindHuntress_BodyContacts
   m_EditorClassIdentifier: 
-  WallSlideLearnt: 1
-  WallSlideGravityModifier: 1.5
-  WallJumpLearnt: 1
-  WallJumpPower: 0
-  WallJumpAngle: 30
-  AirJumpCharges: 1
-  AirJumpPower: 0
+  TerrainLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  GroundContactDistance: 0.03
+  CeilingContactDistance: 0.03
+  WallContactDistance: 0.03
