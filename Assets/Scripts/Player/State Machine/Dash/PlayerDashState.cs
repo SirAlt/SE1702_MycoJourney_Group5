@@ -84,6 +84,11 @@ public class PlayerDashState : PlayerState
         }
     }
 
+    public override void PhysicsUpdate()
+    {
+        // Do nothing. Maintain velocity.
+    }
+
     public override void OnAnimationEventTriggered(PlayerController.AnimationTriggerType triggerType)
     {
         base.OnAnimationEventTriggered(triggerType);

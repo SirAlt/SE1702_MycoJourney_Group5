@@ -49,17 +49,21 @@ public class SmoothTileMovement : MonoBehaviour, IMovementStrategy
             bool terrainHit = _rb.Cast(Vector2.right * Mathf.Sign(xStep), _filter, _hits, Mathf.Abs(xStep) + _config.CollisionOffset) > 0;
 
             // TODO: Slopes - TRY: RaycastHit2D.Normal
+            if (terrainHit)
+            {
+//var normal = 
+            }
 
             if (terrainHit)
             {
                 float distance;
                 var closestDistance = Mathf.Infinity;
-                foreach (var raycastHit in _hits)
+                foreach (var hit in _hits)
                 {
                     // TODO: Account for collider shape
                     distance = xStep > 0
-                       ? raycastHit.point.x - bounds.max.x
-                       : bounds.min.x - raycastHit.point.x;
+                       ? hit.point.x - bounds.max.x
+                       : bounds.min.x - hit.point.x;
                     if (distance < closestDistance) { closestDistance = distance; }
                 }
                 xStep = Mathf.Max(closestDistance - _config.CollisionOffset, 0) * Mathf.Sign(xStep);

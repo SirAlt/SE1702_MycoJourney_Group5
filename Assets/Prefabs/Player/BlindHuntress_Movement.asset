@@ -18,4 +18,4 @@ MonoBehaviour:
   BoundaryLayer:
     serializedVersion: 2
     m_Bits: 1048576
-  CollisionOffset: 0.03
+  CollisionOffset: 0.01

@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dab54491e5d161c48bc87732edf3974b, type: 3}
   m_Name: BlindHuntress_Stats
   m_EditorClassIdentifier: 
-  MaxGroundSpeed: 3.5
+  MaxGroundSpeed: 1.2
   GroundAcceleration: 9999
   GroundDeceleration: 9999
-  MaxAirSpeed: 3.5
+  MaxAirSpeed: 1.2
   AirAcceleration: 9999
   AirDeceleration: 9999
-  GravitationalAcceleration: 60
-  MaxFallSpeed: 10
-  JumpPower: 9.5
+  GravitationalAcceleration: 20
+  MaxFallSpeed: 3.35
+  JumpPower: 3.2
   InitialJumpAcceleration: 0
   InitialJumpPeriod: 0.06
   JumpEndEarlyGravityModifier: 3.5
@@ -28,13 +28,13 @@ MonoBehaviour:
   JumpBuffer: 0.1
   JumpRefractoryPeriod: 0.06
   CoyoteTime: 0.12
-  ApexThreshold: 8
-  ApexAccelerationBonus: 60
-  ApexAntiGravityBonus: 25
+  ApexThreshold: 2.65
+  ApexAccelerationBonus: 20
+  ApexAntiGravityBonus: 8.35
   GroundingVelocity: 0
   WallJumpLockinTime: 0.02
   WallJumpKickawayPeriod: 0.08
-  DashSpeed: 6
+  DashSpeed: 2
   DashDuration: 1
   DashBuffer: 0.1
   DashEndEarlyWindow: 0.8
