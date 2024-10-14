@@ -24,15 +24,17 @@ public abstract class PlayerJumpState : PlayerAirState, IApexModifier
             player.FrameVelocity.x += apexVelocityBonus * Mathf.Sign(player.Input.Move.x);
         }
 
-        var apexAntiGravBonus = Mathf.Lerp(0, player.Stats.ApexAntiGravityBonus, apexRatio);
+        var apexAntiGravBonus = player.Stats.ApexAntiGravityBonus * apexRatio;
         gravity = Mathf.MoveTowards(gravity, 0, apexAntiGravBonus); // Improved logic. No longer allows "upward" gravity.
     }
 
     #endregion
 
+    public bool ReEntrant { get; set; }
+
     protected bool jumpEndedEarly;
 
-    public PlayerJumpState(PlayerController host, PlayerStateMachine stateMachine) : base(host, stateMachine)
+    public PlayerJumpState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
     }
 
@@ -42,18 +44,26 @@ public abstract class PlayerJumpState : PlayerAirState, IApexModifier
         player.TimeJumpStarted = Time.time;
         player.Input.ClearJump();
         jumpEndedEarly = false;
+
+        if (!ReEntrant) ExecuteJump();
+        ReEntrant = false;
+    }
+
+    protected virtual void ExecuteJump()
+    {
     }
 
     public override void ExitState()
     {
         base.ExitState();
         jumpEndedEarly = false;
+        ReEntrant = false;
     }
 
     public override void CheckForTransition()
     {
         base.CheckForTransition();
-        if (stateMachine.Transitioning) return;
+        if (stateMachine.Transitioning && stateMachine.NextState is not PlayerAirSlashState) return;
         if (player.FrameVelocity.y <= 0)
         {
             stateMachine.ChangeState(player.JumpFallState);
@@ -61,17 +71,21 @@ public abstract class PlayerJumpState : PlayerAirState, IApexModifier
         }
     }
 
-    // Leave this here so it's easy to trace that this state implements custom physics
+    // TRACE: This state implements custom physics.
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
     }
 
+    protected override void HandleCeilingHit()
+    {
+        if (player.TimeJumpStarted + player.Stats.InitialJumpPeriod > Time.time) return;
+        base.HandleCeilingHit();
+    }
+
     protected override void HandleGravity()
     {
         gravity = player.Stats.GravitationalAcceleration;
-
-        if (player.BodyContacts.Ceiling) goto APPLY_GRAVITY;
 
         if (!jumpEndedEarly) CheckIfJumpEndedEarly();
 
@@ -81,7 +95,7 @@ public abstract class PlayerJumpState : PlayerAirState, IApexModifier
         }
         else if (player.TimeJumpStarted + player.Stats.InitialJumpPeriod > Time.time)
         {
-            gravity = 0;
+            gravity *= player.Stats.InitialJumpGravityModifier;
             player.FrameVelocity.y += player.Stats.InitialJumpAcceleration * Time.fixedDeltaTime;
         }
         else
@@ -89,8 +103,7 @@ public abstract class PlayerJumpState : PlayerAirState, IApexModifier
             ApplyApexModifier();
         }
 
-    APPLY_GRAVITY:
-        player.FrameVelocity.y = Mathf.MoveTowards(player.FrameVelocity.y, -1.0f * player.Stats.MaxFallSpeed, gravity * Time.fixedDeltaTime);
+        player.FrameVelocity.y = Mathf.MoveTowards(player.FrameVelocity.y, -1.0f * player.Stats.FallSpeedClamp, gravity * Time.fixedDeltaTime);
     }
 
     protected virtual void CheckIfJumpEndedEarly()

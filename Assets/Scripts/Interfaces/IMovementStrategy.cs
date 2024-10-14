@@ -2,7 +2,9 @@
 
 public interface IMovementStrategy
 {
-    Rigidbody2D Rb { set; }
+    Collider2D Collider { set; }
+
+    Vector2 EnvironmentVelocity { set; get; }
 
     void Move(Vector2 velocity);
 }

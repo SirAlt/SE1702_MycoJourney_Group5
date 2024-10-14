@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: blind_huntress_dash
+  m_Name: blind_huntress_dash_loop
   serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
@@ -21,15 +21,7 @@ AnimationClip:
   - serializedVersion: 2
     curve:
     - time: 0
-      value: {fileID: -364860633, guid: f6e382d1faa05ff4d8c550f18f7e4fe1, type: 3}
-    - time: 0.1
       value: {fileID: 245488663, guid: f6e382d1faa05ff4d8c550f18f7e4fe1, type: 3}
-    - time: 0.2
-      value: {fileID: -800796414, guid: f6e382d1faa05ff4d8c550f18f7e4fe1, type: 3}
-    - time: 0.3
-      value: {fileID: -182578143, guid: f6e382d1faa05ff4d8c550f18f7e4fe1, type: 3}
-    - time: 0.4
-      value: {fileID: -96215247, guid: f6e382d1faa05ff4d8c550f18f7e4fe1, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -52,17 +44,13 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: -364860633, guid: f6e382d1faa05ff4d8c550f18f7e4fe1, type: 3}
     - {fileID: 245488663, guid: f6e382d1faa05ff4d8c550f18f7e4fe1, type: 3}
-    - {fileID: -800796414, guid: f6e382d1faa05ff4d8c550f18f7e4fe1, type: 3}
-    - {fileID: -182578143, guid: f6e382d1faa05ff4d8c550f18f7e4fe1, type: 3}
-    - {fileID: -96215247, guid: f6e382d1faa05ff4d8c550f18f7e4fe1, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.5
+    m_StopTime: 0.1
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0

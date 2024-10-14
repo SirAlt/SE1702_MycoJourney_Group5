@@ -5,44 +5,52 @@ public class PlayerJumpFallState : PlayerFallState, IApexModifier
 {
     #region Apex Modifier
 
-    private PlayerJumpState _preceedingJumpState;
+    private IApexModifier _apexModifier;
+    private IApexModifier ApexModifier => _apexModifier ?? new DefaultApexModifier(player, stateMachine);
 
-    public float ApexRatio => _preceedingJumpState.ApexRatio;
+    public float ApexRatio => ApexModifier.ApexRatio;
 
-    public void ApplyApexModifier() => _preceedingJumpState.ApplyApexModifier();
+    public void ApplyApexModifier() => ApexModifier.ApplyApexModifier();
+
+    private class DefaultApexModifier : PlayerJumpState
+    {
+        public DefaultApexModifier(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine)
+        {
+        }
+    }
 
     #endregion
 
-    public PlayerJumpFallState(PlayerController host, PlayerStateMachine stateMachine) : base(host, stateMachine)
+    public PlayerJumpFallState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
     }
 
     public override void EnterState()
     {
         base.EnterState();
-        Debug.Log($"Entering PlayerState [ Jump Fall ]");
-        
-        if (stateMachine.PreviousState is not PlayerJumpState preceedingJumpState)
+
+        if (stateMachine.PrevState is not PlayerJumpState prevApexModifierState)
         {
-            Debug.LogError($"Illegal transition. Previous state was not a [ Jump ] state.");
-            stateMachine.Reset();
-            return;
+            //Debug.LogWarning($"Suspicious transition. Previous state was not a [ Jump ] state.");
         }
-        _preceedingJumpState = preceedingJumpState;
+        else
+        {
+            _apexModifier = prevApexModifierState;
+        }
 
         player.Animator.Play(PlayerController.JumpFallAnim, -1, 0f);
     }
 
-    public override void ExitState()
+    // TRACE: This state implements custom physics.
+    public override void PhysicsUpdate()
     {
-        base.ExitState();
-        Debug.Log($"Exiting PlayerState [ Jump Fall ]");
+        base.PhysicsUpdate();
     }
 
     protected override void HandleGravity()
     {
         gravity = player.Stats.GravitationalAcceleration;
         ApplyApexModifier();
-        player.FrameVelocity.y = Mathf.MoveTowards(player.FrameVelocity.y, -1.0f * player.Stats.MaxFallSpeed, gravity * Time.fixedDeltaTime);
+        player.FrameVelocity.y = Mathf.MoveTowards(player.FrameVelocity.y, -1.0f * player.Stats.FallSpeedClamp, gravity * Time.fixedDeltaTime);
     }
 }

@@ -13,18 +13,18 @@ TagManager:
   - UI
   - Player
   - Terrain
-  - Hitbox
-  - Hurtbox
+  - PlayerHitbox
+  - PlayerHurtbox
   - Enemy
+  - EnemyHitbox
+  - EnemyHurtbox
   - 
   - 
   - 
   - 
   - 
   - 
-  - 
-  - 
-  - 
+  - PlatformDetector
   - InvisWall
   - 
   - 

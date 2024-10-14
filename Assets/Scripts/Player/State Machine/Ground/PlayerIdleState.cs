@@ -2,21 +2,25 @@
 
 public class PlayerIdleState : PlayerGroundState
 {
-    public PlayerIdleState(PlayerController host, PlayerStateMachine stateMachine) : base(host, stateMachine)
+    public PlayerIdleState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
     }
 
     public override void EnterState()
     {
         base.EnterState();
-        Debug.Log($"Entering PlayerState [ Idle ]");
-        player.Animator.Play("Idle", -1, 0f);
-    }
-
-    public override void ExitState()
-    {
-        base.ExitState();
-        Debug.Log($"Exiting PlayerState [ Idle ]");
+        switch (stateMachine.PrevState)
+        {
+            case PlayerGroundDashState:
+                player.Animator.Play(PlayerController.GroundDashEndAnim, -1, 0f);
+                break;
+            case PlayerAirDashState:
+                player.Animator.Play(PlayerController.AirDashEndAnim, -1, 0f);
+                break;
+            default:
+                player.Animator.Play(PlayerController.IdleAnim, -1, 0f);
+                break;
+        }
     }
 
     public override void CheckForTransition()
@@ -26,6 +30,11 @@ public class PlayerIdleState : PlayerGroundState
         if (player.Input.Move.x != 0)
         {
             stateMachine.ChangeState(player.RunState);
+            return;
+        }
+        if (player.HasValidSlashInput)
+        {
+            stateMachine.ChangeState(player.StandSlashState);
             return;
         }
     }

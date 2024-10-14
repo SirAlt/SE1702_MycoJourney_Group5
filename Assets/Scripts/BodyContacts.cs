@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[DefaultExecutionOrder(-100)]
+[DefaultExecutionOrder(-10)]
 [RequireComponent(typeof(Collider2D))]
 public class BodyContacts : MonoBehaviour
 {
@@ -24,7 +24,7 @@ public class BodyContacts : MonoBehaviour
     private void FixedUpdate()
     {
         var _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
-        Physics2D.queriesStartInColliders = false;
+        Physics2D.queriesStartInColliders = true;
 
         CheckGround();
         CheckCeiling();

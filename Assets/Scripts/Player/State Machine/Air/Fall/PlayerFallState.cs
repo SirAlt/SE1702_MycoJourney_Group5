@@ -1,6 +1,6 @@
 ﻿public abstract class PlayerFallState : PlayerAirState
 {
-    public PlayerFallState(PlayerController host, PlayerStateMachine stateMachine) : base(host, stateMachine)
+    public PlayerFallState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
     }
 
@@ -8,8 +8,8 @@
     {
         // PRIO: ... > _WallSlide_ > AirJump
         base.CheckForTransition();
-        if (stateMachine.Transitioning && stateMachine.CurrentState is not PlayerAirJumpState) return;
-        if (player.IsMovingAgainstWall && player.Abilities.WallSlideLearnt)
+        if (stateMachine.Transitioning && stateMachine.NextState is not (PlayerAirJumpState or PlayerAirSlashState)) return;
+        if (player.Abilities.WallSlideLearnt && player.IsMovingAgainstWall)
         {
             stateMachine.ChangeState(player.WallSlideState);
             return;

@@ -6,6 +6,9 @@ public class PlayerDashState : PlayerState
     protected bool dashEndedEarly;
     protected bool invincibilityGranted;
 
+    private Vector2 _cachedCollisionBoxSize;
+    private Vector2 _cachedHurtboxSize;
+
     public PlayerDashState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
     }
@@ -19,46 +22,96 @@ public class PlayerDashState : PlayerState
         dashEndedEarly = false;
 
         ApplyDash();
-
-
-        if (player.Abilities.InvincibleDash)
-        {
-            invincibilityGranted = true;
-            // Grant invinc
-        }
+        ModifyHitboxes();
+        if (player.Abilities.InvincibleDash) GrantInvincibility();
     }
 
     protected virtual void ApplyDash()
     {
-        float dashDirection;
+        var dashDirection = GetDashDirection();
+        dashVector = new Vector2(dashDirection * player.Stats.DashSpeed, 0);
+        player.FrameVelocity = dashVector;
+    }
+
+    protected virtual float GetDashDirection()
+    {
         if (player.Input.Move.x != 0)
         {
-            dashDirection = Mathf.Sign(player.Input.Move.x);
+            UpdateFacing();
+            return Mathf.Sign(player.Input.Move.x);
         }
         else
         {
-            dashDirection = player.IsFacingRight ? 1.0f : -1.0f;
+            return player.IsFacingRight ? 1.0f : -1.0f;
         }
-        dashVector = new Vector2(dashDirection * player.Stats.DashSpeed, 0);
-        player.FrameVelocity = dashVector;
+    }
+
+    protected virtual void ModifyHitboxes()
+    {
+        var colBoxSize = _cachedCollisionBoxSize = player.CollisionBox.size;
+        var colBoxScale = player.Stats.DashCollisionBoxScale;
+        player.CollisionBox.size = new Vector2(colBoxSize.x * colBoxScale.x, colBoxSize.y * colBoxScale.y);
+
+
+        var hurtboxSize = _cachedHurtboxSize = player.Hurtbox.Collider.size;
+        var hurtboxScale = player.Stats.DashHurtboxScale;
+        player.Hurtbox.Collider.size = new Vector2(hurtboxSize.x * hurtboxScale.x, hurtboxSize.y * hurtboxScale.y);
+    }
+
+    protected virtual void GrantInvincibility()
+    {
+        invincibilityGranted = true;
+        player.Hurtbox.BeginInvincibility();
     }
 
     public override void ExitState()
     {
         base.ExitState();
+
         player.TimeDashEnded = Time.time;
         dashEndedEarly = false;
-        if (invincibilityGranted)
-        {
-            invincibilityGranted = false;
-            // Remove invinc
-        }
+
+        RestoreHitboxes();
+        if (invincibilityGranted) RemoveInvincibility();
+    }
+
+    protected virtual void RestoreHitboxes()
+    {
+        player.CollisionBox.size = _cachedCollisionBoxSize;
+        player.Hurtbox.Collider.size = _cachedHurtboxSize;
+    }
+
+    protected virtual void RemoveInvincibility()
+    {
+        invincibilityGranted = false;
+        player.Hurtbox.EndInvincibility();
     }
 
     public override void CheckForTransition()
     {
         base.CheckForTransition();
         if (stateMachine.Transitioning) return;
+
+        if (player.Stats.CanJumpCancelDash && player.HasValidJumpInput)
+        {
+            if (player.BodyContacts.Ground || player.TimeLeftGround + player.Stats.CoyoteTime > Time.time)
+            {
+                stateMachine.ChangeState(player.GroundJumpState);
+                return;
+            }
+            if (player.AirDashCharges > 0)
+            {
+                stateMachine.ChangeState(player.AirJumpState);
+                return;
+            }
+        }
+
+        if (player.HasValidSlashInput)
+        {
+            stateMachine.ChangeState(player.DashSlashState);
+            return;
+        }
+
         if (!dashEndedEarly) CheckIfDashEndedEarly();
         if (dashEndedEarly || player.TimeDashStarted + player.Stats.DashDuration <= Time.time)
         {
@@ -87,10 +140,5 @@ public class PlayerDashState : PlayerState
     public override void PhysicsUpdate()
     {
         // Do nothing. Maintain velocity.
-    }
-
-    public override void OnAnimationEventTriggered(PlayerController.AnimationTriggerType triggerType)
-    {
-        base.OnAnimationEventTriggered(triggerType);
     }
 }

@@ -1,6 +1,6 @@
 ﻿public abstract class PlayerWallState : PlayerState
 {
-    public PlayerWallState(PlayerController host, PlayerStateMachine stateMachine) : base(host, stateMachine)
+    public PlayerWallState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
     }
 
@@ -32,7 +32,7 @@
             stateMachine.ChangeState(player.NaturalFallState);
             return;
         }
-        if (player.HasValidJumpInput && player.Abilities.WallJumpLearnt)
+        if (player.Abilities.WallJumpLearnt && player.HasValidJumpInput)
         {
             stateMachine.ChangeState(player.WallJumpState);
             return;
