@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: d996ac9a8db3ff748a36083309f62f11
+guid: 1ce2da4ddf43c6446b3c5f6e85b86a4a
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -34,7 +34,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 128
+  spritePixelsToUnits: 28
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -72,7 +72,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -93,11 +93,24 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: GEM 3 - BLUE - Spritesheet_0
+      name: GEM 3 - PURPLE - Spritesheet_0
       rect:
         serializedVersion: 2
         x: 0
@@ -111,14 +124,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bff68518c88e6bc42a573ccb221eba95
-      internalID: -196996333
+      spriteID: 7f2a5bcaf00fe6146a7b11f688ae45eb
+      internalID: 1339692258
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: GEM 3 - BLUE - Spritesheet_1
+      name: GEM 3 - PURPLE - Spritesheet_1
       rect:
         serializedVersion: 2
         x: 28
@@ -132,14 +145,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 936a5e7bf9adff5408f76c585ba7feab
-      internalID: 1791616831
+      spriteID: cabaf6bccd9ec9f4c85b784d0d95016d
+      internalID: -2098405972
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: GEM 3 - BLUE - Spritesheet_2
+      name: GEM 3 - PURPLE - Spritesheet_2
       rect:
         serializedVersion: 2
         x: 56
@@ -153,14 +166,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 232831f3fb3449749afdc82f7baf3b75
-      internalID: 1560373775
+      spriteID: 90eb80fd1b6301741b638cdf885b32bf
+      internalID: -1367562231
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: GEM 3 - BLUE - Spritesheet_3
+      name: GEM 3 - PURPLE - Spritesheet_3
       rect:
         serializedVersion: 2
         x: 84
@@ -174,14 +187,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 14d60b07362898d45bcd5826418808bd
-      internalID: -1405706861
+      spriteID: c7407d94e50b4fb428906b7cb98afc98
+      internalID: 703842259
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: GEM 3 - BLUE - Spritesheet_4
+      name: GEM 3 - PURPLE - Spritesheet_4
       rect:
         serializedVersion: 2
         x: 112
@@ -195,14 +208,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7560922c873290d4cbfc6dd00edd3fa9
-      internalID: -527663953
+      spriteID: 74cc18d36c61c5c4da5439d0513d29f9
+      internalID: 2022336785
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: GEM 3 - BLUE - Spritesheet_5
+      name: GEM 3 - PURPLE - Spritesheet_5
       rect:
         serializedVersion: 2
         x: 140
@@ -216,14 +229,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 171b28dbff936a242b5f5e16a0ff3571
-      internalID: 177387074
+      spriteID: ccad83c10bd051e418fbde529e6f59c9
+      internalID: 686999088
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: GEM 3 - BLUE - Spritesheet_6
+      name: GEM 3 - PURPLE - Spritesheet_6
       rect:
         serializedVersion: 2
         x: 168
@@ -237,14 +250,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2aa2ca95539b2b74aa9420cb69361348
-      internalID: 220152003
+      spriteID: 263fc7cd3851ed74d903c6377e5d88b2
+      internalID: -2127180481
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: GEM 3 - BLUE - Spritesheet_7
+      name: GEM 3 - PURPLE - Spritesheet_7
       rect:
         serializedVersion: 2
         x: 196
@@ -258,14 +271,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ab47c673c373f7b4995ddedbe1b873b1
-      internalID: -1708935875
+      spriteID: 27c03af616cb6c54aba3bbc207a5627f
+      internalID: 45208673
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: GEM 3 - BLUE - Spritesheet_8
+      name: GEM 3 - PURPLE - Spritesheet_8
       rect:
         serializedVersion: 2
         x: 224
@@ -279,14 +292,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 736c93b99a10c6f4692f7b364258c808
-      internalID: -1589146920
+      spriteID: e207c77b9019b7d42ac8618a991dbbd2
+      internalID: -629862620
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: GEM 3 - BLUE - Spritesheet_9
+      name: GEM 3 - PURPLE - Spritesheet_9
       rect:
         serializedVersion: 2
         x: 252
@@ -300,14 +313,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ec6e35817ddc1e946af32e693019eb93
-      internalID: 1634266636
+      spriteID: bc54073a14fbe1e4f80f88fb8a26c8eb
+      internalID: -80438195
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: GEM 3 - BLUE - Spritesheet_10
+      name: GEM 3 - PURPLE - Spritesheet_10
       rect:
         serializedVersion: 2
         x: 280
@@ -321,8 +334,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ebeb73ffc4e603540bb5c6751def4330
-      internalID: 474549499
+      spriteID: 7761478bd98331944a5d2bddbf630325
+      internalID: -1437556855
       vertices: []
       indices: 
       edges: []
@@ -338,17 +351,17 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      GEM 3 - BLUE - Spritesheet_0: -196996333
-      GEM 3 - BLUE - Spritesheet_1: 1791616831
-      GEM 3 - BLUE - Spritesheet_10: 474549499
-      GEM 3 - BLUE - Spritesheet_2: 1560373775
-      GEM 3 - BLUE - Spritesheet_3: -1405706861
-      GEM 3 - BLUE - Spritesheet_4: -527663953
-      GEM 3 - BLUE - Spritesheet_5: 177387074
-      GEM 3 - BLUE - Spritesheet_6: 220152003
-      GEM 3 - BLUE - Spritesheet_7: -1708935875
-      GEM 3 - BLUE - Spritesheet_8: -1589146920
-      GEM 3 - BLUE - Spritesheet_9: 1634266636
+      GEM 3 - PURPLE - Spritesheet_0: 1339692258
+      GEM 3 - PURPLE - Spritesheet_1: -2098405972
+      GEM 3 - PURPLE - Spritesheet_10: -1437556855
+      GEM 3 - PURPLE - Spritesheet_2: -1367562231
+      GEM 3 - PURPLE - Spritesheet_3: 703842259
+      GEM 3 - PURPLE - Spritesheet_4: 2022336785
+      GEM 3 - PURPLE - Spritesheet_5: 686999088
+      GEM 3 - PURPLE - Spritesheet_6: -2127180481
+      GEM 3 - PURPLE - Spritesheet_7: 45208673
+      GEM 3 - PURPLE - Spritesheet_8: -629862620
+      GEM 3 - PURPLE - Spritesheet_9: -80438195
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

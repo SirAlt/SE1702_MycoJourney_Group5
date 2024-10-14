@@ -81,7 +81,7 @@ public class FlyingEye : MonoBehaviour
         float distance = Vector2.Distance(nextWaypoint.position, transform.position);
 
         rb.velocity = directionToWaypoint * flightSpeed;
-        Debug.Log("Current Position: " + transform.position);
+        //Debug.Log("Current Position: " + transform.position);
 
 
         if (distance <= waypointReachedDistance)
@@ -94,7 +94,7 @@ public class FlyingEye : MonoBehaviour
             }
 
             nextWaypoint = waypoints[waypointNum];
-            Debug.Log("Updated Next Waypoint: " + nextWaypoint.position);
+            //Debug.Log("Updated Next Waypoint: " + nextWaypoint.position);
         }
 
     }

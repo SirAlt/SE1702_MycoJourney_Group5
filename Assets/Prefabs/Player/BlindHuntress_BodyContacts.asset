@@ -15,6 +15,6 @@ MonoBehaviour:
   TerrainLayer:
     serializedVersion: 2
     m_Bits: 128
-  GroundContactDistance: 0.008
-  CeilingContactDistance: 0.008
-  WallContactDistance: 0.008
+  GroundContactDistance: 0.07
+  CeilingContactDistance: 0.07
+  WallContactDistance: 0.07

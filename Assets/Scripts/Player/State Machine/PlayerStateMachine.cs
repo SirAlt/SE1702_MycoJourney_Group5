@@ -3,33 +3,41 @@ using UnityEngine;
 
 public class PlayerStateMachine
 {
-    public bool Transitioning { get; private set; }
-    public PlayerState PreviousState { get; private set; }
-    public PlayerState CurrentState { get; private set; }
+    private PlayerState _cachedStartingState;
 
-    private PlayerState _startingState;
+    public bool Transitioning { get; private set; }
+    public PlayerState PrevState { get; private set; }
+    public PlayerState CurrentState { get; private set; }
+    public PlayerState NextState { get; private set; }
 
     public void Initialize(PlayerState startingState)
     {
-        _startingState = startingState;
-        PreviousState = null;
+        _cachedStartingState = startingState;
+
+        Transitioning = false;
+        PrevState = null;
         CurrentState = startingState;
+        NextState = null;
+
         CurrentState.EnterState();
     }
 
     public void ChangeState(PlayerState newState)
     {
         Transitioning = true;
-        PreviousState = CurrentState;
-        CurrentState = newState;
+        NextState = newState;
     }
 
     public void ChangeStateImmediate(PlayerState newState)
     {
-        PreviousState = CurrentState;
-        CurrentState = newState;
-        PreviousState.ExitState();
-        CurrentState.EnterState();
+        ChangeState(newState);
+        ExecuteTransition();
+    }
+
+    public void StopTransition()
+    {
+        Transitioning = false;
+        NextState = null;
     }
 
     public void FrameUpdate()
@@ -40,8 +48,29 @@ public class PlayerStateMachine
 
     public void PhysicsUpdate()
     {
-        CheckForTransition(chain: false);
+        CheckForTransition();
+        ExecuteTransition();
         CurrentState.PhysicsUpdate();
+    }
+
+    private void CheckForTransition()
+    {
+        if (Transitioning) return;
+        CurrentState.CheckForTransition();
+    }
+
+    private void ExecuteTransition()
+    {
+        if (Transitioning)
+        {
+            Transitioning = false;
+            PrevState = CurrentState;
+            CurrentState = NextState;
+            NextState = null;
+            PrevState.ExitState();
+            CurrentState.EnterState();
+            //Debug.Log($"PlayerState transition: [ {PrevState.GetType().Name[6..^5]} ] >> [ {CurrentState.GetType().Name[6..^5]} ]");
+        }
     }
 
     public void Reset()
@@ -56,26 +85,7 @@ public class PlayerStateMachine
         }
         finally
         {
-            Initialize(_startingState);
-        }
-    }
-
-    //          ### WARNING ###
-    // DO NOT USE chain mode. It has many
-    // unfixed bugs, including infinite loops.
-    private void CheckForTransition(bool chain)
-    {
-        do
-        {
-            Transitioning = false;
-            CurrentState.CheckForTransition();
-        } while (chain && Transitioning);
-
-        if (Transitioning)
-        {
-            Transitioning = false;
-            PreviousState.ExitState();
-            CurrentState.EnterState();
+            Initialize(_cachedStartingState);
         }
     }
 }

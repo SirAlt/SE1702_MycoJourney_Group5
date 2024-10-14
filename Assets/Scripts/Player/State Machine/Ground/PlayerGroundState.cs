@@ -2,13 +2,14 @@
 
 public abstract class PlayerGroundState : PlayerState
 {
-    public PlayerGroundState(PlayerController host, PlayerStateMachine stateMachine) : base(host, stateMachine)
+    public PlayerGroundState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
     }
 
     public override void EnterState()
     {
         base.EnterState();
+        if (stateMachine.PrevState is PlayerGroundState) return;
         player.AirJumpCharges = player.Abilities.AirJumpCharges;
         player.AirDashCharges = player.Abilities.AirDashCharges;
     }
@@ -16,6 +17,8 @@ public abstract class PlayerGroundState : PlayerState
     public override void ExitState()
     {
         base.ExitState();
+        if (stateMachine.NextState is PlayerGroundState) return;
+        player.FrameVelocity.y = 0; // Cancel grounding force.
         player.TimeLeftGround = Time.time;
     }
 

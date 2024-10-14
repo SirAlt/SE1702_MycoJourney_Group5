@@ -12,29 +12,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dab54491e5d161c48bc87732edf3974b, type: 3}
   m_Name: BlindHuntress_Stats
   m_EditorClassIdentifier: 
-  MaxGroundSpeed: 1.2
+  MaxGroundSpeed: 7
   GroundAcceleration: 9999
   GroundDeceleration: 9999
-  MaxAirSpeed: 1.2
+  MaxAirSpeed: 7
   AirAcceleration: 9999
   AirDeceleration: 9999
-  GravitationalAcceleration: 20
-  MaxFallSpeed: 3.35
-  JumpPower: 3.2
+  GravitationalAcceleration: 120
+  FallSpeedClamp: 16
+  JumpPower: 19
   InitialJumpAcceleration: 0
-  InitialJumpPeriod: 0.06
+  InitialJumpGravityModifier: 0
+  InitialJumpPeriod: 0.1
   JumpEndEarlyGravityModifier: 3.5
-  JumpEndEarlyWindow: 0.12
+  JumpEndEarlyWindow: 0.14
   JumpBuffer: 0.1
   JumpRefractoryPeriod: 0.06
   CoyoteTime: 0.12
-  ApexThreshold: 2.65
-  ApexAccelerationBonus: 20
-  ApexAntiGravityBonus: 8.35
-  GroundingVelocity: 0
+  ApexThreshold: 12
+  ApexAccelerationBonus: 120
+  ApexAntiGravityBonus: 50
+  GroundingVelocity: 15
   WallJumpLockinTime: 0.02
   WallJumpKickawayPeriod: 0.08
-  DashSpeed: 2
-  DashDuration: 1
-  DashBuffer: 0.1
-  DashEndEarlyWindow: 0.8
+  DashSpeed: 14
+  DashDuration: 0.4
+  DashBuffer: 0.35
+  DashEndEarlyWindow: 0.25
+  CanJumpCancelDash: 1
+  DashCollisionBoxScale: {x: 1, y: 0.3}
+  DashHurtboxScale: {x: 1, y: 0.7}
+  SlashBuffer: 0.1
+  CanJumpCancelAttack: 1
+  CanDashCancelAttack: 1
+  CanAttackMove: 1
+  CancelAttackMoveWhenNoLongerMoving: 1
+  AttackMoveCancelTolerance: 6
+  CanTurnDuringStandingAttack: 0
+  CanTurnDuringAttackMove: 1
+  CanTurnDuringJumpAttack: 1
+  DashSlashMoveSpeed: 9.5

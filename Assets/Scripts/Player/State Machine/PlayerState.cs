@@ -31,7 +31,7 @@ public abstract class PlayerState
     public virtual void PhysicsUpdate()
     {
         UpdateFacing();
-        CheckCeiling();
+        HandleCeilingHit();
     }
 
     protected virtual void UpdateFacing()
@@ -40,7 +40,7 @@ public abstract class PlayerState
         else if (player.Input.Move.x > 0) player.FaceRight();
     }
 
-    protected virtual void CheckCeiling()
+    protected virtual void HandleCeilingHit()
     {
         if (player.BodyContacts.Ceiling)
         {

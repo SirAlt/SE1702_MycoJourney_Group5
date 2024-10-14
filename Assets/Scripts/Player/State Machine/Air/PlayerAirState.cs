@@ -4,7 +4,7 @@ public abstract class PlayerAirState : PlayerState
 {
     protected float gravity;
 
-    public PlayerAirState(PlayerController host, PlayerStateMachine stateMachine) : base(host, stateMachine)
+    public PlayerAirState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
     }
 
@@ -24,7 +24,7 @@ public abstract class PlayerAirState : PlayerState
         }
         if (player.HasValidJumpInput)
         {
-            if (player.BodyContacts.Wall && player.Abilities.WallJumpLearnt)
+            if (player.Abilities.WallJumpLearnt && player.BodyContacts.Wall)
             {
                 stateMachine.ChangeState(player.WallJumpState);
                 return;
@@ -34,6 +34,11 @@ public abstract class PlayerAirState : PlayerState
                 stateMachine.ChangeState(player.AirJumpState);
                 return;
             }
+        }
+        if (player.HasValidSlashInput)
+        {
+            stateMachine.ChangeState(player.AirSlashState);
+            return;
         }
     }
 
@@ -61,7 +66,7 @@ public abstract class PlayerAirState : PlayerState
     protected virtual void HandleGravity()
     {
         gravity = player.Stats.GravitationalAcceleration;
-        player.FrameVelocity.y = Mathf.MoveTowards(player.FrameVelocity.y, -1.0f * player.Stats.MaxFallSpeed, gravity * Time.fixedDeltaTime);
+        player.FrameVelocity.y = Mathf.MoveTowards(player.FrameVelocity.y, -1.0f * player.Stats.FallSpeedClamp, gravity * Time.fixedDeltaTime);
     }
 
     public override void OnAnimationEventTriggered(PlayerController.AnimationTriggerType triggerType)

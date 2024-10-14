@@ -9,15 +9,12 @@ public class PlayerGroundDashState : PlayerDashState
     public override void EnterState()
     {
         base.EnterState();
-        Debug.Log($"Entering PlayerState [ Ground Dash ]");
-
-        // TODO: Work out how to freeze on frame 2.
-        player.Animator.Play(PlayerController.GroundDashAnim, -1, 0f);
+        player.Animator.Play(PlayerController.GroundDashStartAnim, -1, 0f);
     }
 
-    public override void ExitState()
+    public override void OnAnimationEventTriggered(PlayerController.AnimationTriggerType triggerType)
     {
-        base.ExitState();
-        Debug.Log($"Exiting PlayerState [ Ground Dash ]");
+        base.OnAnimationEventTriggered(triggerType);
+        // Flinch -> GroundFlinchState
     }
 }

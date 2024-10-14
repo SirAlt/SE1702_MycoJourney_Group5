@@ -4,15 +4,18 @@ public class PlayerWallJumpState : PlayerJumpState
 {
     protected Vector2 jumpVector;
 
-    public PlayerWallJumpState(PlayerController host, PlayerStateMachine stateMachine) : base(host, stateMachine)
+    public PlayerWallJumpState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
     }
 
     public override void EnterState()
     {
         base.EnterState();
-        Debug.Log($"Entering PlayerState [ Wall Jump ]");
+        player.Animator.Play(PlayerController.WallJumpAnim, -1, 0f);
+    }
 
+    protected override void ExecuteJump()
+    {
         float direction = 0;
         // Prioritize jumping left-to-right
         if (player.BodyContacts.WallLeft) { direction = -1; player.FaceRight(); }
@@ -29,14 +32,6 @@ public class PlayerWallJumpState : PlayerJumpState
         var jumpDirection = Quaternion.Euler(0, 0, jumpAngle) * Vector2.up;
         jumpVector = jumpPower * jumpDirection;
         player.FrameVelocity = jumpVector;
-
-        player.Animator.Play(PlayerController.WallJumpAnim, -1, 0f);
-    }
-
-    public override void ExitState()
-    {
-        base.ExitState();
-        Debug.Log($"Exiting PlayerState [ Wall Jump ]");
     }
 
     public override void PhysicsUpdate()
@@ -51,7 +46,7 @@ public class PlayerWallJumpState : PlayerJumpState
         else
         {
             UpdateFacing();
-            CheckCeiling();
+            HandleCeilingHit();
         }
     }
 

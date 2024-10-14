@@ -16,7 +16,7 @@ public class PlayerAbilities : ScriptableObject
     [Tooltip("Can kick against walls to perform jumps.")]
     public bool WallJumpLearnt;
 
-    [Tooltip("Velocity gained instantly at the start of a wall jump.")]
+    [Tooltip("_frameVelocity gained instantly at the start of a wall jump.")]
     public float WallJumpPower;
 
     [Range(0f, 90f)]
@@ -28,7 +28,7 @@ public class PlayerAbilities : ScriptableObject
     [Tooltip("The number of an additional jumps that can be performed while in the air. Double jump (= 1 charge) is the most common.")]
     public float AirJumpCharges;
 
-    [Tooltip("Velocity gained instantly at the start of an air jump.")]
+    [Tooltip("_frameVelocity gained instantly at the start of an air jump.")]
     public float AirJumpPower;
 
     [Tooltip("Can regain air jump uses when grabbing onto walls in additional to landing on the ground.")]
@@ -50,4 +50,9 @@ public class PlayerAbilities : ScriptableObject
 
     [Tooltip("Can regain air dash uses when grabbing onto walls in additional to landing on the ground.")]
     public bool RechargeDashesOnWall;
+
+
+    [Header("Slash")]
+    [Tooltip("The amount of time after performing a slash attacks before another can be performed.")]
+    public float SlashCooldown;
 }

@@ -14,11 +14,12 @@ public class InputManager : MonoBehaviour
     public bool JumpHeld { get; private set; }
     public float TimeJumpWasPressed { get; private set; } = Mathf.NegativeInfinity;
 
-    public bool SlashPressedThisFrame { get; private set; }
-
     public bool DashPressedThisFrame { get; private set; }
     public bool DashHeld { get; private set; }
     public float TimeDashWasPressed { get; private set; } = Mathf.NegativeInfinity;
+
+    public bool SlashPressedThisFrame { get; private set; }
+    public float TimeSlashWasPressed { get; private set; } = Mathf.NegativeInfinity;
 
     private PlayerInput _playerInput;
 
@@ -67,7 +68,6 @@ public class InputManager : MonoBehaviour
         }
         JumpHeld = _jumpAction.IsPressed();
 
-        SlashPressedThisFrame = _slashAction.WasPressedThisFrame();
 
         if (_dashAction.WasPerformedThisFrame())
         {
@@ -75,12 +75,19 @@ public class InputManager : MonoBehaviour
             TimeDashWasPressed = Time.time;
         }
         DashHeld = _dashAction.IsPressed();
+
+        if (_slashAction.WasPerformedThisFrame())
+        {
+            SlashPressedThisFrame = true;
+            TimeSlashWasPressed = Time.time;
+        }
     }
 
     private void FixedUpdate()
     {
         JumpPressedThisFrame = false;
         DashPressedThisFrame = false;
+        SlashPressedThisFrame = false;
     }
 
     public void ClearJump()
@@ -93,5 +100,29 @@ public class InputManager : MonoBehaviour
     {
         DashPressedThisFrame = false;
         TimeDashWasPressed = Mathf.NegativeInfinity;
+    }
+
+    public void ClearSlash()
+    {
+        SlashPressedThisFrame = false;
+        TimeSlashWasPressed = Mathf.NegativeInfinity;
+    }
+
+    public void PressJump(float time)
+    {
+        JumpPressedThisFrame = true;
+        TimeJumpWasPressed = time >= 0 ? time : Time.time;
+    }
+
+    public void PressDash(float time)
+    {
+        DashPressedThisFrame = true;
+        TimeDashWasPressed = time >= 0 ? time : Time.time;
+    }
+
+    public void PressSlash(float time)
+    {
+        SlashPressedThisFrame = true;
+        TimeSlashWasPressed = time >= 0 ? time : Time.time;
     }
 }

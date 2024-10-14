@@ -15,7 +15,7 @@ public class PlayerAnimator : MonoBehaviour
         //        ReturnToIdle();
         //        break;
         //    default:
-        //        Debug.LogException(new NotImplementedException($"No animation state found for current player state: {prev} >> __{cur}__"));
+        //        Debug.LogException(new NotImplementedException($"No animation state found for current _player state: {prev} >> __{cur}__"));
         //        break;
         //}
 
@@ -33,7 +33,7 @@ public class PlayerAnimator : MonoBehaviour
         //            _animator.ResetTrigger(FallKey);
         //            break;
         //        default:
-        //            Debug.LogException(new NotImplementedException($"No cleanup logic found for previous player state: __{prev}__ >> {cur}"));
+        //            Debug.LogException(new NotImplementedException($"No cleanup logic found for previous _player state: __{prev}__ >> {cur}"));
         //            break;
         //    }
         //}
