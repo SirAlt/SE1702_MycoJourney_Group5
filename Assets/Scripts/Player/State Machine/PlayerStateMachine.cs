@@ -63,12 +63,12 @@ public class PlayerStateMachine
     {
         if (Transitioning)
         {
-            Transitioning = false;
+            CurrentState.ExitState();
             PrevState = CurrentState;
             CurrentState = NextState;
             NextState = null;
-            PrevState.ExitState();
             CurrentState.EnterState();
+            Transitioning = false;
             //Debug.Log($"PlayerState transition: [ {PrevState.GetType().Name[6..^5]} ] >> [ {CurrentState.GetType().Name[6..^5]} ]");
         }
     }

@@ -11,7 +11,7 @@ public class PlayerRunState : PlayerGroundState
         base.EnterState();
 
         var offset = 0f;
-        if (stateMachine.PrevState is not PlayerGroundState) offset = 0.35f;
+        if (stateMachine.PrevState is not IGroundState) offset = 0.35f;
         player.Animator.Play(PlayerController.RunAnim, -1, offset);
     }
 

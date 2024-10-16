@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public abstract class PlayerAirState : PlayerState
+public abstract class PlayerAirState : PlayerState, IAirState
 {
     protected float gravity;
 
@@ -12,11 +12,6 @@ public abstract class PlayerAirState : PlayerState
     {
         base.CheckForTransition();
         if (stateMachine.Transitioning) return;
-        if (player.BodyContacts.Ground)
-        {
-            player.Land();
-            return;
-        }
         if (player.HasValidDashInput && player.AirDashCharges > 0)
         {
             stateMachine.ChangeState(player.AirDashState);
@@ -49,7 +44,7 @@ public abstract class PlayerAirState : PlayerState
         HandleGravity();
     }
 
-    protected virtual void HandleAirControl()
+    public virtual void HandleAirControl()
     {
         if (player.Input.Move.x == 0)
         {
@@ -63,7 +58,7 @@ public abstract class PlayerAirState : PlayerState
         }
     }
 
-    protected virtual void HandleGravity()
+    public virtual void HandleGravity()
     {
         gravity = player.Stats.GravitationalAcceleration;
         player.FrameVelocity.y = Mathf.MoveTowards(player.FrameVelocity.y, -1.0f * player.Stats.FallSpeedClamp, gravity * Time.fixedDeltaTime);

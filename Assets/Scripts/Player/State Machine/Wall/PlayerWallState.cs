@@ -1,4 +1,6 @@
-﻿public abstract class PlayerWallState : PlayerState
+﻿using UnityEngine;
+
+public abstract class PlayerWallState : PlayerState, IWallState
 {
     public PlayerWallState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
@@ -11,6 +13,14 @@
             player.AirJumpCharges = player.Abilities.AirJumpCharges;
         if (player.Abilities.RechargeDashesOnWall)
             player.AirDashCharges = player.Abilities.AirDashCharges;
+    }
+
+    public override void ExitState()
+    {
+        base.ExitState();
+        if (stateMachine.NextState is IWallState) return;
+        player.TimeLeftWall = Time.time;
+        player.LastWallContactSide = player.BodyContacts.WallLeft ? -1 : 1;     // Prioritize left-to-right movement -> Prioritize left wall contact.
     }
 
     public override void CheckForTransition()

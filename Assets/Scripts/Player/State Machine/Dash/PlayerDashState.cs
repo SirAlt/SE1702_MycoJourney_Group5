@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class PlayerDashState : PlayerState
+public class PlayerDashState : PlayerState, IDashState
 {
     protected Vector2 dashVector;
     protected bool dashEndedEarly;
@@ -21,12 +21,12 @@ public class PlayerDashState : PlayerState
         player.Input.ClearDash();
         dashEndedEarly = false;
 
-        ApplyDash();
+        ExecuteDash();
         ModifyHitboxes();
         if (player.Abilities.InvincibleDash) GrantInvincibility();
     }
 
-    protected virtual void ApplyDash()
+    public virtual void ExecuteDash()
     {
         var dashDirection = GetDashDirection();
         dashVector = new Vector2(dashDirection * player.Stats.DashSpeed, 0);
@@ -99,7 +99,7 @@ public class PlayerDashState : PlayerState
                 stateMachine.ChangeState(player.GroundJumpState);
                 return;
             }
-            if (player.AirDashCharges > 0)
+            if (player.AirJumpCharges > 0)
             {
                 stateMachine.ChangeState(player.AirJumpState);
                 return;

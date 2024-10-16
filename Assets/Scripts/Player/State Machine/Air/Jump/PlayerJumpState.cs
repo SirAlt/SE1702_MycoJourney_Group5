@@ -1,16 +1,8 @@
 ﻿using UnityEngine;
-using static PlayerJumpState;
 
-public abstract class PlayerJumpState : PlayerAirState, IApexModifier
+public abstract class PlayerJumpState : PlayerAirState, IJumpState
 {
     #region Apex Modifier
-
-    public interface IApexModifier
-    {
-        float ApexRatio { get; }
-
-        void ApplyApexModifier();
-    }
 
     public virtual float ApexRatio => Mathf.InverseLerp(player.Stats.ApexThreshold, 0, Mathf.Abs(player.FrameVelocity.y));
 
@@ -30,7 +22,7 @@ public abstract class PlayerJumpState : PlayerAirState, IApexModifier
 
     #endregion
 
-    public bool ReEntrant { get; set; }
+    public bool Reentrant { get; set; }
 
     protected bool jumpEndedEarly;
 
@@ -45,11 +37,11 @@ public abstract class PlayerJumpState : PlayerAirState, IApexModifier
         player.Input.ClearJump();
         jumpEndedEarly = false;
 
-        if (!ReEntrant) ExecuteJump();
-        ReEntrant = false;
+        if (!Reentrant) ExecuteJump();
+        Reentrant = false;
     }
 
-    protected virtual void ExecuteJump()
+    public virtual void ExecuteJump()
     {
     }
 
@@ -57,7 +49,7 @@ public abstract class PlayerJumpState : PlayerAirState, IApexModifier
     {
         base.ExitState();
         jumpEndedEarly = false;
-        ReEntrant = false;
+        Reentrant = false;
     }
 
     public override void CheckForTransition()
@@ -83,7 +75,7 @@ public abstract class PlayerJumpState : PlayerAirState, IApexModifier
         base.HandleCeilingHit();
     }
 
-    protected override void HandleGravity()
+    public override void HandleGravity()
     {
         gravity = player.Stats.GravitationalAcceleration;
 

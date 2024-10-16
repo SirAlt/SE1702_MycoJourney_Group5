@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public class PlayerGroundJumpState : PlayerJumpState
+﻿public class PlayerGroundJumpState : PlayerJumpState
 {
     public PlayerGroundJumpState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
@@ -12,7 +10,7 @@ public class PlayerGroundJumpState : PlayerJumpState
         player.Animator.Play(PlayerController.GroundJumpAnim, -1, 0f);
     }
 
-    protected override void ExecuteJump()
+    public override void ExecuteJump()
     {
         player.FrameVelocity.y = player.Stats.JumpPower;
     }

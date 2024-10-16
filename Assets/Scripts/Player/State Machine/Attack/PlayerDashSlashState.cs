@@ -47,7 +47,7 @@ public class PlayerDashSlashState : PlayerDashState, IAttackState
             }
         }
 
-        // Run > Idle > NatFall are transition on attack finished.
+        // Run > Idle > NatFall are executed upon attack animation finish.
     }
 
     public override void OnAnimationEventTriggered(PlayerController.AnimationTriggerType triggerType)

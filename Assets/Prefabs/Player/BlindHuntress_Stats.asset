@@ -20,7 +20,7 @@ MonoBehaviour:
   AirDeceleration: 9999
   GravitationalAcceleration: 120
   FallSpeedClamp: 16
-  JumpPower: 19
+  JumpPower: 17
   InitialJumpAcceleration: 0
   InitialJumpGravityModifier: 0
   InitialJumpPeriod: 0.1
@@ -29,18 +29,21 @@ MonoBehaviour:
   JumpBuffer: 0.1
   JumpRefractoryPeriod: 0.06
   CoyoteTime: 0.12
+  WallCoyoteTime: 0.06
   ApexThreshold: 12
   ApexAccelerationBonus: 120
   ApexAntiGravityBonus: 50
   GroundingVelocity: 15
+  DropThroughInitialGracePeriod: 0.06
+  ContinuousDropThrough: 1
   WallJumpLockinTime: 0.02
-  WallJumpKickawayPeriod: 0.08
+  WallJumpInitialPeriod: 0.1
   DashSpeed: 14
   DashDuration: 0.4
   DashBuffer: 0.35
   DashEndEarlyWindow: 0.25
   CanJumpCancelDash: 1
-  DashCollisionBoxScale: {x: 1, y: 0.3}
+  DashCollisionBoxScale: {x: 1, y: 1}
   DashHurtboxScale: {x: 1, y: 0.7}
   SlashBuffer: 0.1
   CanJumpCancelAttack: 1
