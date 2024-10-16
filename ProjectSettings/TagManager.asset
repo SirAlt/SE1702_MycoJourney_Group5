@@ -10,6 +10,7 @@ TagManager:
   - RedGemMarker
   - BlueGemMarker
   - BlackGemMarker
+  - LevelExit
   layers:
   - Default
   - TransparentFX

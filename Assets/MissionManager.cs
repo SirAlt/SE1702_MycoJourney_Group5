@@ -32,6 +32,7 @@ public class MissionManager : MonoBehaviour
     private const string RedGemMarkerTag = "RedGemMarker";
     private const string BlueGemMarkerTag = "BlueGemMarker";
     private const string BlackGemMarkerTag = "BlackGemMarker";
+    private const string LevelExitTag = "LevelExit";
 
     private Image _redKeyMarker;
     private Image _blueKeyMarker;
@@ -118,6 +119,7 @@ public class MissionManager : MonoBehaviour
         _redGemMarker = GameObject.FindGameObjectWithTag(RedGemMarkerTag).GetComponent<Image>();
         _blueGemMarker = GameObject.FindGameObjectWithTag(BlueGemMarkerTag).GetComponent<Image>();
         _blackGemMarker = GameObject.FindGameObjectWithTag(BlackGemMarkerTag).GetComponent<Image>();
+        _levelExit = GameObject.FindGameObjectWithTag(LevelExitTag);
     }
 
     private void OnEnable()
@@ -174,8 +176,8 @@ public class MissionManager : MonoBehaviour
 
         if (HasRedGem && HasBlueGem && HasBlackGem)
         {
-            //_levelExit.SetActive(true);
-            Destroy(_levelExit);
+            _levelExit.SetActive(true);
+            //Destroy(_levelExit);
         }
     }
 }
