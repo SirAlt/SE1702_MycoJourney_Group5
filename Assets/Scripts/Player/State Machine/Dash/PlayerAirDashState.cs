@@ -1,4 +1,4 @@
-﻿public class PlayerAirDashState : PlayerDashState
+﻿public class PlayerAirDashState : PlayerDashState, IAirState
 {
     public PlayerAirDashState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
@@ -39,5 +39,15 @@
     {
         base.OnAnimationEventTriggered(triggerType);
         // Flinch -> AirFlinchState
+    }
+
+    public void HandleAirControl()
+    {
+        // Do nothing. Character cannot change direction while dashing.
+    }
+
+    public void HandleGravity()
+    {
+        // Do nothing. Gravity is ignored during a dash.
     }
 }

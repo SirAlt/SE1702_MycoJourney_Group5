@@ -17,12 +17,12 @@ MonoBehaviour:
   WallJumpLearnt: 1
   WallJumpPower: 0
   WallJumpAngle: 20
-  AirJumpCharges: 99
+  AirJumpCharges: 1
   AirJumpPower: 0
   RechargeJumpsOnWall: 1
   DashLearnt: 1
   DashCooldown: 0.2
-  AirDashCharges: 99
+  AirDashCharges: 1
   InvincibleDash: 1
   RechargeDashesOnWall: 1
   SlashCooldown: 0.3

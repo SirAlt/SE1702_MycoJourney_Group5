@@ -1,8 +1,9 @@
 using UnityEngine;
 
 [DefaultExecutionOrder(0)]
-[RequireComponent(typeof(BodyContacts), typeof(BoxCollider2D))]
-[RequireComponent(typeof(IMovementStrategy), typeof(IMovementStrategy))]
+[RequireComponent(typeof(InputManager), typeof(BodyContacts))]
+[RequireComponent(typeof(IMovement), typeof(BoxCollider2D))]
+[RequireComponent(typeof(Animator))]
 public class PlayerController : MonoBehaviour, IMoveable, IDamageable
 {
     [field: SerializeField] public PlayerStats Stats { get; private set; }
@@ -23,6 +24,7 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
 
     public PlayerJumpFallState JumpFallState { get; private set; }
     public PlayerNaturalFallState NaturalFallState { get; private set; }
+    public PlayerDropThroughFallState DropThroughFallState { get; private set; }
 
     public PlayerWallSlideState WallSlideState { get; private set; }
 
@@ -38,8 +40,8 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
 
     #region Helpers
 
-    public float TimeLeftGround { get; set; }   // Coyote time
-    public float TimeJumpStarted { get; set; }  // Initial jump period + Variable jump height + Anti-mash + Wall-jump initial path
+    public float TimeLeftGround { get; set; } = Mathf.NegativeInfinity;   // Coyote time
+    public float TimeJumpStarted { get; set; } = Mathf.NegativeInfinity;  // Initial jump period + Variable jump height + Anti-mash + Wall-jump initial path
 
     public bool HasJumpInput => Input.JumpPressedThisFrame || (Input.TimeJumpWasPressed + Stats.JumpBuffer > Time.time);
     public bool IsInJumpRefractoryPeriod => TimeJumpStarted + Stats.JumpRefractoryPeriod > Time.time;
@@ -47,18 +49,23 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
 
     public bool IsMovingAgainstWall => (BodyContacts.WallLeft && Input.Move.x < 0) || (BodyContacts.WallRight && Input.Move.x > 0);
 
-    public float TimeDashStarted { get; set; }  // Dash duration + Stop dash
-    public float TimeDashEnded { get; set; }    // Dash cooldown
+    public float TimeLeftWall { get; set; } = Mathf.NegativeInfinity;   // Wall jump coyote time
+    public int LastWallContactSide { get; set; }    // -1 = Left; 1 = Right
+
+    public float TimeDashStarted { get; set; } = Mathf.NegativeInfinity; // Dash duration + Stop dash
+    public float TimeDashEnded { get; set; } = Mathf.NegativeInfinity;    // Dash cooldown
 
     public bool HasDashInput => Input.DashPressedThisFrame || (Input.TimeDashWasPressed + Stats.DashBuffer > Time.time);
     public bool DashOnCooldown => TimeDashEnded + Abilities.DashCooldown > Time.time;
     public bool HasValidDashInput => Abilities.DashLearnt && HasDashInput && !DashOnCooldown;
 
-    public float TimeSlashActivated { get; set; }   // Attack speed
+    public float TimeSlashActivated { get; set; } = Mathf.NegativeInfinity; // Attack speed
 
     public bool HasSlashInput => Input.SlashPressedThisFrame || (Input.TimeSlashWasPressed + Stats.SlashBuffer > Time.time);
     public bool SlashOnCooldown => TimeSlashActivated + Abilities.SlashCooldown > Time.time;
     public bool HasValidSlashInput => HasSlashInput && !SlashOnCooldown;
+
+    public float TimeDropThroughStarted { get; set; } = Mathf.NegativeInfinity;
 
     public bool IsFacingRight => transform.rotation.eulerAngles.y == 0f;
 
@@ -90,6 +97,7 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
     #region FX
 
     public Animator Animator { get; private set; }
+    public PlayerFX FX { get; private set; }
 
     public const string IdleAnim = "Idle";
     public const string RunAnim = "Run";
@@ -139,10 +147,10 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
 
     #region Attacks
 
-    [field: SerializeField] public BladeOfTheWealdAttack StandSlash { get; private set; }
-    [field: SerializeField] public BladeOfTheWealdAttack RunSlash { get; private set; }
-    [field: SerializeField] public BladeOfTheWealdAttack AirSlash { get; private set; }
-    [field: SerializeField] public BladeOfTheWealdAttack DashSlash { get; private set; }
+    [field: SerializeField] public Attack StandSlash { get; private set; }
+    [field: SerializeField] public Attack RunSlash { get; private set; }
+    [field: SerializeField] public Attack AirSlash { get; private set; }
+    [field: SerializeField] public Attack DashSlash { get; private set; }
 
     #endregion
 
@@ -150,7 +158,7 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
 
     public void Move(Vector2 velocity)
     {
-        _mover.EnvironmentVelocity += velocity;
+        Mover.EnvironmentVelocity += velocity;
     }
 
     #endregion
@@ -185,7 +193,7 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
     // It was Unity that forced a mutable struct on us.
     [HideInInspector] public Vector2 FrameVelocity;
 
-    private IMovementStrategy _mover;
+    [HideInInspector] public IMovement Mover { get; private set; }
 
     private void Awake()
     {
@@ -200,6 +208,7 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
         WallJumpState = new PlayerWallJumpState(this, StateMachine);
         JumpFallState = new PlayerJumpFallState(this, StateMachine);
         NaturalFallState = new PlayerNaturalFallState(this, StateMachine);
+        DropThroughFallState = new PlayerDropThroughFallState(this, StateMachine);
         WallSlideState = new PlayerWallSlideState(this, StateMachine);
         GroundDashState = new PlayerGroundDashState(this, StateMachine);
         AirDashState = new PlayerAirDashState(this, StateMachine);
@@ -209,8 +218,9 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
         DashSlashState = new PlayerDashSlashState(this, StateMachine);
 
         Animator = GetComponent<Animator>();
+        FX = GetComponent<PlayerFX>();
 
-        _mover = GetComponent<IMovementStrategy>();
+        Mover = GetComponent<IMovement>();
         CollisionBox = GetComponent<BoxCollider2D>();
     }
 
@@ -218,7 +228,7 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
     {
         Input = InputManager.Instance;
         StateMachine.Initialize(IdleState);
-        _mover.Collider = CollisionBox;
+        Mover.Collider = CollisionBox;
         CurrentHealth = MaxHealth;
     }
 
@@ -232,8 +242,8 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
     private void FixedUpdate()
     {
         StateMachine.PhysicsUpdate();
-        _mover.Move(FrameVelocity);
-        _mover.EnvironmentVelocity = Vector2.zero;
+        Mover.Move(FrameVelocity);
+        Mover.EnvironmentVelocity = Vector2.zero;
     }
 
     #endregion

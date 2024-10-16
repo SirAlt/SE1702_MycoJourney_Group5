@@ -27,7 +27,7 @@ public class PlayerAirSlashState : PlayerAirState, IAttackState
 
         if (stateMachine.PrevState is not PlayerAirState preceedingAirState)
         {
-            Debug.LogError($"Illegal transition. Previous state was not a(n) [ Air ] state.");
+            Debug.LogError($"Illegal transition. Previous state was not a pure [ Air ] state.");
             stateMachine.Reset();
             return;
         }
@@ -112,7 +112,7 @@ public class PlayerAirSlashState : PlayerAirState, IAttackState
                 goto default;
             case PlayerController.AnimationTriggerType.AttackFinished:
                 // FIXME: Would be better if we could override the enter methods instead.
-                if (_underlyingAirState is PlayerJumpState jumpState) jumpState.ReEntrant = true;
+                if (_underlyingAirState is PlayerJumpState jumpState) jumpState.Reentrant = true;
                 // FIXME: Should somehow pass the underlying jump state.
                 stateMachine.ChangeState(_underlyingAirState);
                 goto default;

@@ -1,12 +1,11 @@
 ﻿using UnityEngine;
-using static PlayerJumpState;
 
-public class PlayerJumpFallState : PlayerFallState, IApexModifier
+public class PlayerJumpFallState : PlayerFallState, IJumpState
 {
     #region Apex Modifier
 
-    private IApexModifier _apexModifier;
-    private IApexModifier ApexModifier => _apexModifier ?? new DefaultApexModifier(player, stateMachine);
+    private IJumpState _apexModifier;
+    private IJumpState ApexModifier => _apexModifier ?? new DefaultApexModifier(player, stateMachine);
 
     public float ApexRatio => ApexModifier.ApexRatio;
 
@@ -38,7 +37,8 @@ public class PlayerJumpFallState : PlayerFallState, IApexModifier
             _apexModifier = prevApexModifierState;
         }
 
-        player.Animator.Play(PlayerController.JumpFallAnim, -1, 0f);
+        if (stateMachine.PrevState is not PlayerFallState)
+            player.Animator.Play(PlayerController.JumpFallAnim, -1, 0f);
     }
 
     // TRACE: This state implements custom physics.
@@ -47,10 +47,15 @@ public class PlayerJumpFallState : PlayerFallState, IApexModifier
         base.PhysicsUpdate();
     }
 
-    protected override void HandleGravity()
+    public override void HandleGravity()
     {
         gravity = player.Stats.GravitationalAcceleration;
         ApplyApexModifier();
         player.FrameVelocity.y = Mathf.MoveTowards(player.FrameVelocity.y, -1.0f * player.Stats.FallSpeedClamp, gravity * Time.fixedDeltaTime);
+    }
+
+    public void ExecuteJump()
+    {
+        // Do nothing.
     }
 }

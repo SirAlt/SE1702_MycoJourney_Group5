@@ -3,7 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - RedKeyMarker
+  - BlueKeyMarker
+  - BlackKeyMarker
+  - RedGemMarker
+  - BlueGemMarker
+  - BlackGemMarker
   layers:
   - Default
   - TransparentFX
@@ -18,13 +24,13 @@ TagManager:
   - Enemy
   - EnemyHitbox
   - EnemyHurtbox
+  - EnemyDetector
+  - ObjectiveDetector
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - PlatformDetector
+  - OneWayPlatform
+  - MovingPlatform
   - InvisWall
   - 
   - 

@@ -68,6 +68,9 @@ public class PlayerStats : ScriptableObject
     [Tooltip("The time before coyote jump becomes unusable. Coyote jump allows jump to execute even after leaving a ledge.")]
     public float CoyoteTime;
 
+    [Tooltip("Similar to coyote time, but applies to wall jumps after leaving .")]
+    public float WallCoyoteTime;
+
 
     [Header("Apex Modifier")]
     [Tooltip("Vertical speed below which apex modifier activates. The lower, the larger the apex modifier window.")]
@@ -85,12 +88,20 @@ public class PlayerStats : ScriptableObject
     public float GroundingVelocity;
 
 
+    [Header("Drop Through")]
+    [Tooltip("The grace period during which the drop-through state will not expire. Helps the character fall through platforms in cases of high collision offset.")]
+    public float DropThroughInitialGracePeriod;
+
+    [Tooltip("Whether the character can drop through multiple one-way platforms consecutively. Requires holding down the drop-through input.")]
+    public bool CanMaintainDropThrough;
+
+
     [Header("Wall Jump")]
     [Tooltip("The amount of time the character is locked in animation at the start of a wall jump.")]
     public float WallJumpLockinTime;
 
     [Tooltip("Length of the period of time where the character strictly follows a wall jump's path, ignoring gravity. Can be interrupted by ending the jump early.")]
-    public float WallJumpKickawayPeriod;
+    public float WallJumpInitialPeriod;
 
 
     [Header("Dash")]

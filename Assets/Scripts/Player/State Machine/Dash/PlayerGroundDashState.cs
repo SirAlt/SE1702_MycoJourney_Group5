@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public class PlayerGroundDashState : PlayerDashState
+﻿public class PlayerGroundDashState : PlayerDashState, IGroundState
 {
     public PlayerGroundDashState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
