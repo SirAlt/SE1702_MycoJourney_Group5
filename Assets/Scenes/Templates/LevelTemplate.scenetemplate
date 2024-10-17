@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 13966, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: New SceneTemplate
+  m_Name: LevelTemplate
   m_EditorClassIdentifier: 
   templateScene: {fileID: 102900000, guid: 8c9cfa26abfee488c85f1582747f6a02, type: 3}
   templateName: 
@@ -161,9 +161,9 @@ MonoBehaviour:
     instantiationMode: 0
   - dependency: {fileID: 2800000, guid: 35f52cc4d86265849b8cf18495a3e97d, type: 3}
     instantiationMode: 0
-  - dependency: {fileID: 2800000, guid: a48c7c003aad51740ba50759a3ee7e5e, type: 3}
-    instantiationMode: 0
   - dependency: {fileID: 5724546385942171300, guid: 9482237719ced5b47b97b43e9310b3c2, type: 3}
+    instantiationMode: 0
+  - dependency: {fileID: 2800000, guid: a48c7c003aad51740ba50759a3ee7e5e, type: 3}
     instantiationMode: 0
   - dependency: {fileID: 2800000, guid: ac38840dd48c3ff4aa9c9674c4336e8c, type: 3}
     instantiationMode: 0
@@ -316,6 +316,8 @@ MonoBehaviour:
   - dependency: {fileID: 2800000, guid: d3646f309323f1e4fa4e5e5220202d12, type: 3}
     instantiationMode: 0
   - dependency: {fileID: 2800000, guid: c805e6169ca1de3439fc29814a6a4ea7, type: 3}
+    instantiationMode: 0
+  - dependency: {fileID: 2800000, guid: 5739c025c2095454ebda17895843a5ce, type: 3}
     instantiationMode: 0
   - dependency: {fileID: 2800000, guid: 0b6cfa4bc8ff57246a003374511696aa, type: 3}
     instantiationMode: 0
