@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 [DefaultExecutionOrder(0)]
@@ -40,6 +39,9 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
     public PlayerFlinchState GroundFlinchState { get; private set; }
     public PlayerAirFlinchState AirFlinchState { get; private set; }
     public PlayerGetUpState GetUpState { get; private set; }
+
+    public PlayerDyingState DyingState { get; private set; }
+    public PlayerDeathState DeathState { get; private set; }
 
     #endregion
 
@@ -133,6 +135,9 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
     public const string GroundFlinchEndAnim = "Flinch End";
     public const string AirFlinchAnim = "Flinch";
     public const string AirFlinchEndAnim = "Flinch End";
+
+    public const string DyingAnim = "Dying";
+    public const string DyingFallAnim = "Dying Fall";
     public const string DeathAnim = "Death";
 
     public enum AnimationTriggerType
@@ -142,8 +147,9 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
         AttackFinished,
 
         Flinch,
-        DeathStarted,
-        DeathFinished
+        DyingStart,
+        DyingEnd,
+        DeathComplete
     }
 
     private void NotifyAnimationEventTriggered(AnimationTriggerType triggerType)
@@ -189,16 +195,23 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
 
     public void TakeDamage(float damage, Vector2 direction)
     {
+        if (Hurtbox.HasInvincibility) return;
+
         CurrentHealth -= damage;
-        FX.UpdateHealthBar(CurrentHealth, MaxHealth);
         LastHitDirection = direction;
+
+        FX.UpdateHealthBar(CurrentHealth, MaxHealth);
+
         if (CurrentHealth > 0)
         {
             Flinch();
-            // Gain invincibility;
+            Hurtbox.GainInvincibility(Stats.PostDamageInvincibilityDuration);
+            FX.StartFlicker(Stats.PostDamageInvincibilityDuration);
         }
         else
+        {
             Die();
+        }
     }
 
     private void Flinch()
@@ -208,8 +221,7 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
 
     public void Die()
     {
-        // TODO: Implement death.
-        Destroy(gameObject);
+        NotifyAnimationEventTriggered(AnimationTriggerType.DyingStart);
     }
 
     #endregion
@@ -249,6 +261,8 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
         DashSlashState = new PlayerDashSlashState(this, StateMachine);
         GroundFlinchState = new PlayerGroundFlinchState(this, StateMachine);
         AirFlinchState = new PlayerAirFlinchState(this, StateMachine);
+        DyingState = new PlayerDyingState(this, StateMachine);
+        DeathState = new PlayerDeathState(this, StateMachine);
 
         Animator = GetComponent<Animator>();
         FX = GetComponent<PlayerFX>();

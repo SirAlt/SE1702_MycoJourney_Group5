@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
 
 public class PlayerJumpFallState : PlayerFallState, IJumpState
 {
@@ -8,9 +9,13 @@ public class PlayerJumpFallState : PlayerFallState, IJumpState
 
     private IJumpState _jumpState;
 
-    public float ApexRatio => _jumpState.ApexRatio;
+    // This doesn't need to exist, but it does because [ Air Slash ] nabs <Air> states for their PhysicsUpdate()
+    // without calling their EnterState() or ExitState() methods. See there for more details.
+    private IJumpState JumpState => _jumpState ??= _defaultJumpState; 
 
-    public void ApplyApexModifier() => _jumpState.ApplyApexModifier();
+    public float ApexRatio => JumpState.ApexRatio;
+
+    public void ApplyApexModifier() => JumpState.ApplyApexModifier();
 
     private class DefaultJumpState : PlayerJumpState
     {

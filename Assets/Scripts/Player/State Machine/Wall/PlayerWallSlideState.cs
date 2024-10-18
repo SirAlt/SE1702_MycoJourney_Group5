@@ -9,6 +9,7 @@ public class PlayerWallSlideState : PlayerWallState
     public override void EnterState()
     {
         base.EnterState();
+        player.FrameVelocity.y = 0;
         player.Animator.Play(PlayerController.WallSlideAnim, -1, 0f);
     }
 
@@ -25,6 +26,9 @@ public class PlayerWallSlideState : PlayerWallState
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
-        player.FrameVelocity.y = -1.0f * player.Abilities.WallSlideGravityModifier * player.Stats.GravitationalAcceleration * Time.fixedDeltaTime;
+
+        var _accel = player.Abilities.WallSlideGravityModifier * player.Stats.GravitationalAcceleration;
+        var _speedClamp = player.Abilities.WallSlideGravityModifier * player.Stats.FallSpeedClamp;
+        player.FrameVelocity.y = Mathf.MoveTowards(player.FrameVelocity.y, -1.0f * _speedClamp, _accel * Time.fixedDeltaTime);
     }
 }

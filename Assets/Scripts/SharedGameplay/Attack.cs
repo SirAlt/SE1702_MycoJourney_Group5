@@ -6,10 +6,14 @@ public class Attack : MonoBehaviour
     [SerializeField] protected float damage;
     [SerializeField] protected bool multiHit;
     [SerializeField] protected float damageTickCooldown;
+    
+    [SerializeField] private bool doubleDamageBug;
 
     protected float damageTickTimer;
     protected Vector2 hitDirection;
     protected Collider2D hitbox;
+
+    // Intentional "bug" where the attack deals damage again if the target leaves then re-enters its hitbox.
 
     protected virtual void Awake()
     {
@@ -33,7 +37,7 @@ public class Attack : MonoBehaviour
 
     protected void OnTriggerEnter2D(Collider2D collision)
     {
-        if (damageTickTimer <= 0)
+        if (doubleDamageBug || damageTickTimer <= 0)
         {
             FindTargetAndDealDamage(collision);
         }

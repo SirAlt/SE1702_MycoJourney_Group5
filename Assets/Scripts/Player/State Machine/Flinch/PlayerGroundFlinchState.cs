@@ -10,6 +10,7 @@ public class PlayerGroundFlinchState : PlayerFlinchState, IGroundState
     {
         knockbackSpeed = player.Stats.GroundFlinchKnockbackSpeed;
         knockbackDistance = player.Stats.GroundFlinchKnockbackDistance;
+        residualKnockbackSpeed = 0;
         base.EnterState();
         player.Animator.Play(PlayerController.GroundFlinchAnim, -1, 0f);
     }

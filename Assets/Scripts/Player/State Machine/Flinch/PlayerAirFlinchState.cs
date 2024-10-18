@@ -31,13 +31,14 @@ public class PlayerAirFlinchState : PlayerFlinchState, IAirState
     {
         knockbackSpeed = player.Stats.AirFlinchKnockbackSpeed;
         knockbackDistance = player.Stats.AirFlinchKnockbackDistance;
+        residualKnockbackSpeed = knockbackSpeed * player.Stats.AirFlinchResidualKnockbackSpeedRatio;
         base.EnterState();
         player.Animator.Play(PlayerController.AirFlinchAnim, -1, 0f);
     }
 
     protected override void StartKnockback()
     {
-        player.FrameVelocity.y = 16.0f;
+        player.FrameVelocity.y = player.Stats.AirFlinchKnockupSpeed;
     }
 
     public override void ExitState()

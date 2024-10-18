@@ -181,6 +181,12 @@ public class PlayerStats : ScriptableObject
     [Tooltip("The speed at which the character is knocked back during air flinch.")]
     public float AirFlinchKnockbackSpeed;
 
+    [Tooltip("Upward force applied to the character at the start of an air flinch.")]
+    public float AirFlinchKnockupSpeed;
+
+    [Tooltip("Proportion of knockback speed still in effect after reaching knockback distance."), Range(0f, 1f)]
+    public float AirFlinchResidualKnockbackSpeedRatio;
+
     [Tooltip("Whether the character can jump to recover from a flinch early.")]
     public bool CanJumpRecoverFromFlinch;
 
@@ -189,4 +195,17 @@ public class PlayerStats : ScriptableObject
 
     [Tooltip("The number of frames a get-up action takes.")]
     public int GetUpFrameCount;
+
+
+    [Header("Post-damage Invincibility")]
+    [Tooltip("How long the invinciblity the character receives after taking damage lasts.")]
+    public float PostDamageInvincibilityDuration;
+
+    [Tooltip("How fast the character flickers during certain types of invinciblity.")]
+    public float InvincibilityFlickerInterval;
+
+
+    [Header("Death")]
+    [Tooltip("Normally the character would need to land to complete the death process. This sets a safety time limit in case of infinite fall.")]
+    public float TransitionToDeathSafeguardTimeLimit;
 }

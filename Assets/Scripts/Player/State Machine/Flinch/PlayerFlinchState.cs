@@ -4,6 +4,7 @@ public class PlayerFlinchState : PlayerState, IFlinchState
 {
     protected float knockbackSpeed;
     protected float knockbackDistance;
+    protected float residualKnockbackSpeed;
 
     protected float distanceKnockedBack;
 
@@ -66,7 +67,7 @@ public class PlayerFlinchState : PlayerState, IFlinchState
         float frameKnockbackSpeed;
         if (distanceKnockedBack >= knockbackDistance)
         {
-            frameKnockbackSpeed = 0;
+            frameKnockbackSpeed = residualKnockbackSpeed;
         }
         else if (knockbackSpeed * Time.fixedDeltaTime <= (knockbackDistance - distanceKnockedBack))
         {

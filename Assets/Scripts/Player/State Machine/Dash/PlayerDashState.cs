@@ -61,7 +61,7 @@ public class PlayerDashState : PlayerState, IDashState
     protected virtual void GrantInvincibility()
     {
         invincibilityGranted = true;
-        player.Hurtbox.BeginInvincibility();
+        player.Hurtbox.GainInvincibility();
     }
 
     public override void ExitState()
@@ -84,7 +84,7 @@ public class PlayerDashState : PlayerState, IDashState
     protected virtual void RemoveInvincibility()
     {
         invincibilityGranted = false;
-        player.Hurtbox.EndInvincibility();
+        player.Hurtbox.RemoveInvincibility();
     }
 
     public override void CheckForTransition()

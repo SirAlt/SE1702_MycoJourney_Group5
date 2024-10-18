@@ -57,5 +57,10 @@ public abstract class PlayerState
                 stateMachine.ChangeState(player.AirFlinchState);
             return;
         }
+        if (triggerType == PlayerController.AnimationTriggerType.DyingStart)
+        {
+            stateMachine.ChangeState(player.DyingState);
+            return;
+        }
     }
 }
