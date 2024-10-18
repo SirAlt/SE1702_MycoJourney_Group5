@@ -2,18 +2,19 @@
 
 public class PlayerJumpFallState : PlayerFallState, IJumpState
 {
-    #region Apex Modifier
+    #region Jump State
 
-    private IJumpState _apexModifier;
-    private IJumpState ApexModifier => _apexModifier ?? new DefaultApexModifier(player, stateMachine);
+    private readonly IJumpState _defaultJumpState;
 
-    public float ApexRatio => ApexModifier.ApexRatio;
+    private IJumpState _jumpState;
 
-    public void ApplyApexModifier() => ApexModifier.ApplyApexModifier();
+    public float ApexRatio => _jumpState.ApexRatio;
 
-    private class DefaultApexModifier : PlayerJumpState
+    public void ApplyApexModifier() => _jumpState.ApplyApexModifier();
+
+    private class DefaultJumpState : PlayerJumpState
     {
-        public DefaultApexModifier(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine)
+        public DefaultJumpState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine)
         {
         }
     }
@@ -22,19 +23,21 @@ public class PlayerJumpFallState : PlayerFallState, IJumpState
 
     public PlayerJumpFallState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
+        _defaultJumpState = new DefaultJumpState(player, stateMachine);
     }
 
     public override void EnterState()
     {
         base.EnterState();
 
-        if (stateMachine.PrevState is not PlayerJumpState prevApexModifierState)
+        if (stateMachine.PrevState is not PlayerJumpState prevJumpState)
         {
-            //Debug.LogWarning($"Suspicious transition. Previous state was not a [ Jump ] state.");
+            //Debug.LogWarning($"Previous state was not a [ Jump ] state. Using defaults for jump state logics.");
+            _jumpState = _defaultJumpState;
         }
         else
         {
-            _apexModifier = prevApexModifierState;
+            _jumpState = prevJumpState;
         }
 
         if (stateMachine.PrevState is not PlayerFallState)

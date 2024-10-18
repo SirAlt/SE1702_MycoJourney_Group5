@@ -53,10 +53,4 @@ public abstract class PlayerGroundState : PlayerState, IGroundState
         base.PhysicsUpdate();
         player.FrameVelocity.y = -1.0f * player.Stats.GroundingVelocity;
     }
-
-    public override void OnAnimationEventTriggered(PlayerController.AnimationTriggerType triggerType)
-    {
-        base.OnAnimationEventTriggered(triggerType);
-        // Flinch -> GroundFlinchState
-    }
 }

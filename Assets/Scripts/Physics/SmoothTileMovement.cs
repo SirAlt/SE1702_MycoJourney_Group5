@@ -116,7 +116,7 @@ public class SmoothTileMovement : MonoBehaviour, IMovement
 
             if (terrainHit)
             {
-                for (int i = _hits.Count - 1; i >= 0; i--)
+                for (int i = _hits.Count - 1; i >= 0; --i)
                 {
                     var hit = _hits[i];
                     if ((Configurations.OneWayPlatformLayer & (1 << hit.transform.gameObject.layer)) != 0
@@ -131,8 +131,6 @@ public class SmoothTileMovement : MonoBehaviour, IMovement
                 var closestDistance = Mathf.Infinity;
                 foreach (var hit in _hits)
                 {
-
-
                     distance = yStep > 0
                        ? hit.point.y - bounds.max.y
                        : bounds.min.y - hit.point.y;

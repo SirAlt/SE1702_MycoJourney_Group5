@@ -18,30 +18,31 @@ MonoBehaviour:
   MaxAirSpeed: 7
   AirAcceleration: 9999
   AirDeceleration: 9999
-  GravitationalAcceleration: 120
-  FallSpeedClamp: 16
+  GravitationalAcceleration: 100
+  FallSpeedClamp: 20
   JumpPower: 17
   InitialJumpAcceleration: 0
   InitialJumpGravityModifier: 0
   InitialJumpPeriod: 0.1
   JumpEndEarlyGravityModifier: 3.5
-  JumpEndEarlyWindow: 0.14
+  JumpCutOffPoint: 0.02
+  JumpEndEarlyWindow: 0.2
   JumpBuffer: 0.1
-  JumpRefractoryPeriod: 0.06
+  JumpCooldown: 0.06
   CoyoteTime: 0.12
   WallCoyoteTime: 0.06
   ApexThreshold: 12
   ApexAccelerationBonus: 120
-  ApexAntiGravityBonus: 50
+  ApexAntiGravityBonus: 25
   GroundingVelocity: 15
   DropThroughInitialGracePeriod: 0.06
-  ContinuousDropThrough: 1
-  WallJumpLockinTime: 0.02
-  WallJumpInitialPeriod: 0.1
+  CanMaintainDropThrough: 0
+  WallJumpCutOffPoint: 0.04
+  WallJumpInitialPeriod: 0.12
   DashSpeed: 14
   DashDuration: 0.4
-  DashBuffer: 0.35
-  DashEndEarlyWindow: 0.25
+  DashBuffer: 0.36
+  DashEndEarlyWindow: 0.24
   CanJumpCancelDash: 1
   DashCollisionBoxScale: {x: 1, y: 1}
   DashHurtboxScale: {x: 1, y: 0.7}
@@ -55,3 +56,12 @@ MonoBehaviour:
   CanTurnDuringAttackMove: 1
   CanTurnDuringJumpAttack: 1
   DashSlashMoveSpeed: 9.5
+  GroundFlinchDuration: 0.4
+  GroundFlinchKnockbackDistance: 1.2
+  GroundFlinchKnockbackSpeed: 10
+  AirFlinchDuration: 0.45
+  AirFlinchKnockbackDistance: 1.6
+  AirFlinchKnockbackSpeed: 10
+  CanJumpRecoverFromFlinch: 0
+  FlinchRecoveryCutOffTime: 0.25
+  GetUpFrameCount: 6

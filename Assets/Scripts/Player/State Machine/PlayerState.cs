@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using static PlayerController;
 
 public abstract class PlayerState
 {
@@ -48,7 +47,15 @@ public abstract class PlayerState
         }
     }
 
-    public virtual void OnAnimationEventTriggered(AnimationTriggerType triggerType)
+    public virtual void OnAnimationEventTriggered(PlayerController.AnimationTriggerType triggerType)
     {
+        if (triggerType == PlayerController.AnimationTriggerType.Flinch)
+        {
+            if (player.BodyContacts.Ground)
+                stateMachine.ChangeState(player.GroundFlinchState);
+            else
+                stateMachine.ChangeState(player.AirFlinchState);
+            return;
+        }
     }
 }

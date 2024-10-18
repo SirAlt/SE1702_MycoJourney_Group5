@@ -102,22 +102,20 @@ public class PlayerAirSlashState : PlayerAirState, IAttackState
 
     public override void OnAnimationEventTriggered(PlayerController.AnimationTriggerType triggerType)
     {
+        base.OnAnimationEventTriggered(triggerType);
         switch (triggerType)
         {
             case PlayerController.AnimationTriggerType.AttackActiveFramesStarted:
                 ActivateAttack();
-                goto default;
+                break;
             case PlayerController.AnimationTriggerType.AttackActiveFramesEnded:
                 DeactivateAttack();
-                goto default;
+                break;
             case PlayerController.AnimationTriggerType.AttackFinished:
                 // FIXME: Would be better if we could override the enter methods instead.
                 if (_underlyingAirState is PlayerJumpState jumpState) jumpState.Reentrant = true;
                 // FIXME: Should somehow pass the underlying jump state.
                 stateMachine.ChangeState(_underlyingAirState);
-                goto default;
-            default:
-                base.OnAnimationEventTriggered(triggerType);
                 break;
         }
     }

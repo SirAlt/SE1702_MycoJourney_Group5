@@ -45,7 +45,10 @@ public class PlayerWallJumpState : PlayerJumpState
     {
         if (!jumpEndedEarly) CheckIfJumpEndedEarly();
 
-        var pastKickAwayPeriod = jumpEndedEarly || player.BodyContacts.Ceiling || player.TimeJumpStarted + player.Stats.WallJumpInitialPeriod <= Time.time;
+        var pastKickAwayPeriod =
+            player.BodyContacts.Ceiling
+            || (jumpEndedEarly && player.TimeJumpStarted + player.Stats.WallJumpCutOffPoint <= Time.time)
+            || player.TimeJumpStarted + player.Stats.WallJumpInitialPeriod <= Time.time;
         if (pastKickAwayPeriod)
         {
             base.PhysicsUpdate();
@@ -54,16 +57,6 @@ public class PlayerWallJumpState : PlayerJumpState
         {
             UpdateFacing();
             HandleCeilingHit();
-        }
-    }
-
-    protected override void CheckIfJumpEndedEarly()
-    {
-        if (!player.Input.JumpHeld
-            && player.TimeJumpStarted + player.Stats.WallJumpLockinTime <= Time.time
-            && player.TimeJumpStarted + player.Stats.JumpEndEarlyWindow > Time.time)
-        {
-            jumpEndedEarly = true;
         }
     }
 }

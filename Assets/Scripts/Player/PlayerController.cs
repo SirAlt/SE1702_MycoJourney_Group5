@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [DefaultExecutionOrder(0)]
@@ -36,6 +37,10 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
     public PlayerAirSlashState AirSlashState { get; private set; }
     public PlayerDashSlashState DashSlashState { get; private set; }
 
+    public PlayerFlinchState GroundFlinchState { get; private set; }
+    public PlayerAirFlinchState AirFlinchState { get; private set; }
+    public PlayerGetUpState GetUpState { get; private set; }
+
     #endregion
 
     #region Helpers
@@ -44,8 +49,8 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
     public float TimeJumpStarted { get; set; } = Mathf.NegativeInfinity;  // Initial jump period + Variable jump height + Anti-mash + Wall-jump initial path
 
     public bool HasJumpInput => Input.JumpPressedThisFrame || (Input.TimeJumpWasPressed + Stats.JumpBuffer > Time.time);
-    public bool IsInJumpRefractoryPeriod => TimeJumpStarted + Stats.JumpRefractoryPeriod > Time.time;
-    public bool HasValidJumpInput => HasJumpInput && !IsInJumpRefractoryPeriod;
+    public bool JumpOnCooldown => TimeJumpStarted + Stats.JumpCooldown > Time.time;
+    public bool HasValidJumpInput => HasJumpInput && !JumpOnCooldown;
 
     public bool IsMovingAgainstWall => (BodyContacts.WallLeft && Input.Move.x < 0) || (BodyContacts.WallRight && Input.Move.x > 0);
 
@@ -67,6 +72,8 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
 
     public float TimeDropThroughStarted { get; set; } = Mathf.NegativeInfinity;
 
+    public float TimeFlinchStarted { get; set; } = Mathf.NegativeInfinity;
+
     public bool IsFacingRight => transform.rotation.eulerAngles.y == 0f;
 
     public bool IsTurningAround => (IsFacingRight && Input.Move.x < 0) || (!IsFacingRight && Input.Move.x > 0);
@@ -74,20 +81,20 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
     public void FaceLeft() => transform.rotation = Quaternion.Euler(0f, 180f, 0f);
     public void FaceRight() => transform.rotation = Quaternion.Euler(0f, 0f, 0f);
 
-    public void Land()
+    public void Land(bool immediate = false)
     {
         if (Input.Move.x != 0)
-            StateMachine.ChangeState(RunState);
+            StateMachine.ChangeState(RunState, immediate);
         else
-            StateMachine.ChangeState(IdleState);
+            StateMachine.ChangeState(IdleState, immediate);
     }
 
-    public void LandImmediate()
+    public void ReturnToNeutral(bool immediate = false)
     {
-        if (Input.Move.x != 0)
-            StateMachine.ChangeStateImmediate(RunState);
+        if (BodyContacts.Ground)
+            Land(immediate);
         else
-            StateMachine.ChangeStateImmediate(IdleState);
+            StateMachine.ChangeState(NaturalFallState, immediate);
     }
 
     #endregion
@@ -105,6 +112,7 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
     public const string GroundJumpAnim = "Jump";
     public const string AirJumpAnim = "Jump";
     public const string WallJumpAnim = "Jump";
+    public const string RecoveryJumpAnim = "Jump";
 
     public const string NaturalFallAnim = "Fall";
     public const string JumpFallAnim = "Fall";
@@ -121,7 +129,10 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
     public const string AirSlashAnim = "Jump Attack";
     public const string DashSlashAnim = "Dash Attack";
 
-    public const string FlinchAnim = "Flinch";
+    public const string GroundFlinchAnim = "Flinch";
+    public const string GroundFlinchEndAnim = "Flinch End";
+    public const string AirFlinchAnim = "Flinch";
+    public const string AirFlinchEndAnim = "Flinch End";
     public const string DeathAnim = "Death";
 
     public enum AnimationTriggerType
@@ -129,6 +140,10 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
         AttackActiveFramesStarted,
         AttackActiveFramesEnded,
         AttackFinished,
+
+        Flinch,
+        DeathStarted,
+        DeathFinished
     }
 
     private void NotifyAnimationEventTriggered(AnimationTriggerType triggerType)
@@ -168,17 +183,32 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
     [field: SerializeField] public float MaxHealth { get; private set; }
     public float CurrentHealth { get; private set; }
 
-    public void TakeDamage(float damage)
+    public Vector2 LastHitDirection { get; private set; }
+
+    public void TakeDamage(float damage) => TakeDamage(damage, Vector2.zero);
+
+    public void TakeDamage(float damage, Vector2 direction)
     {
         CurrentHealth -= damage;
-        if (CurrentHealth <= 0)
+        FX.UpdateHealthBar(CurrentHealth, MaxHealth);
+        LastHitDirection = direction;
+        if (CurrentHealth > 0)
         {
-            Die();
+            Flinch();
+            // Gain invincibility;
         }
+        else
+            Die();
+    }
+
+    private void Flinch()
+    {
+        NotifyAnimationEventTriggered(AnimationTriggerType.Flinch);
     }
 
     public void Die()
     {
+        // TODO: Implement death.
         Destroy(gameObject);
     }
 
@@ -206,6 +236,7 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
         GroundJumpState = new PlayerGroundJumpState(this, StateMachine);
         AirJumpState = new PlayerAirJumpState(this, StateMachine);
         WallJumpState = new PlayerWallJumpState(this, StateMachine);
+        GetUpState = new PlayerGetUpState(this, StateMachine);
         JumpFallState = new PlayerJumpFallState(this, StateMachine);
         NaturalFallState = new PlayerNaturalFallState(this, StateMachine);
         DropThroughFallState = new PlayerDropThroughFallState(this, StateMachine);
@@ -216,6 +247,8 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
         RunSlashState = new PlayerRunSlashState(this, StateMachine);
         AirSlashState = new PlayerAirSlashState(this, StateMachine);
         DashSlashState = new PlayerDashSlashState(this, StateMachine);
+        GroundFlinchState = new PlayerGroundFlinchState(this, StateMachine);
+        AirFlinchState = new PlayerAirFlinchState(this, StateMachine);
 
         Animator = GetComponent<Animator>();
         FX = GetComponent<PlayerFX>();
@@ -237,16 +270,12 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
         StateMachine.FrameUpdate();
     }
 
-    #region Physics
-
     private void FixedUpdate()
     {
         StateMachine.PhysicsUpdate();
         Mover.Move(FrameVelocity);
         Mover.EnvironmentVelocity = Vector2.zero;
     }
-
-    #endregion
 
 #if UNITY_EDITOR
     private void OnValidate()

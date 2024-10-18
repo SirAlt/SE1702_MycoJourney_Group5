@@ -115,16 +115,8 @@ public class PlayerDashState : PlayerState, IDashState
         if (!dashEndedEarly) CheckIfDashEndedEarly();
         if (dashEndedEarly || player.TimeDashStarted + player.Stats.DashDuration <= Time.time)
         {
-            if (player.BodyContacts.Ground)
-            {
-                player.Land();
-                return;
-            }
-            else
-            {
-                stateMachine.ChangeState(player.NaturalFallState);
-                return;
-            }
+            player.ReturnToNeutral();
+            return;
         }
     }
 

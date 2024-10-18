@@ -63,10 +63,4 @@ public abstract class PlayerAirState : PlayerState, IAirState
         gravity = player.Stats.GravitationalAcceleration;
         player.FrameVelocity.y = Mathf.MoveTowards(player.FrameVelocity.y, -1.0f * player.Stats.FallSpeedClamp, gravity * Time.fixedDeltaTime);
     }
-
-    public override void OnAnimationEventTriggered(PlayerController.AnimationTriggerType triggerType)
-    {
-        base.OnAnimationEventTriggered(triggerType);
-        // Flinch -> AirFlinchState
-    }
 }

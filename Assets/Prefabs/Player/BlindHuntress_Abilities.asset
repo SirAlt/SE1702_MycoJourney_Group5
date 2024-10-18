@@ -21,7 +21,7 @@ MonoBehaviour:
   AirJumpPower: 0
   RechargeJumpsOnWall: 1
   DashLearnt: 1
-  DashCooldown: 0.2
+  DashCooldown: 0.1
   AirDashCharges: 1
   InvincibleDash: 1
   RechargeDashesOnWall: 1

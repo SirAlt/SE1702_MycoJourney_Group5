@@ -52,22 +52,20 @@ public class PlayerDashSlashState : PlayerDashState, IAttackState
 
     public override void OnAnimationEventTriggered(PlayerController.AnimationTriggerType triggerType)
     {
+        base.OnAnimationEventTriggered(triggerType);
         switch (triggerType)
         {
             case PlayerController.AnimationTriggerType.AttackActiveFramesStarted:
                 ActivateAttack();
-                goto default;
+                break;
             case PlayerController.AnimationTriggerType.AttackActiveFramesEnded:
                 DeactivateAttack();
-                goto default;
+                break;
             case PlayerController.AnimationTriggerType.AttackFinished:
                 if (player.BodyContacts.Ground)
-                    player.LandImmediate();
+                    player.Land(immediate: true);
                 else
-                    stateMachine.ChangeStateImmediate(player.NaturalFallState);
-                goto default;
-            default:
-                base.OnAnimationEventTriggered(triggerType);
+                    stateMachine.ChangeState(player.NaturalFallState, immediate: true);
                 break;
         }
     }

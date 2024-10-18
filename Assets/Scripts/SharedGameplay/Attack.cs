@@ -2,27 +2,59 @@ using UnityEngine;
 
 public class Attack : MonoBehaviour
 {
-    [SerializeField] private LayerMask attackableLayers;
-    [SerializeField] private float damage;
+    [SerializeField] protected LayerMask attackableLayers;
+    [SerializeField] protected float damage;
+    [SerializeField] protected bool multiHit;
+    [SerializeField] protected float damageTickCooldown;
 
-    private Collider2D _hitbox;
+    protected float damageTickTimer;
+    protected Vector2 hitDirection;
+    protected Collider2D hitbox;
 
-    private void Awake()
+    protected virtual void Awake()
     {
-        _hitbox = GetComponent<Collider2D>();
-        _hitbox.isTrigger = true;
-        _hitbox.enabled = false;
+        hitbox = GetComponent<Collider2D>();
+        hitbox.isTrigger = true;
+        hitbox.enabled = false;
     }
 
-    public void Activate() => _hitbox.enabled = true;
-    public void Deactivate() => _hitbox.enabled = false;
-
-    private void OnTriggerEnter2D(Collider2D other)
+    protected virtual void Start()
     {
-        if ((attackableLayers & (1 << other.gameObject.layer)) != 0)
+    }
+
+    protected virtual void FixedUpdate()
+    {
+        if (!multiHit || damageTickTimer <= 0) return;
+        damageTickTimer -= Time.fixedDeltaTime;
+    }
+
+    public void Activate() => hitbox.enabled = true;
+    public void Deactivate() => hitbox.enabled = false;
+
+    protected void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (damageTickTimer <= 0)
         {
-            var target = other.GetComponentInParent<IDamageable>();
-            target?.TakeDamage(damage);
+            FindTargetAndDealDamage(collision);
+        }
+    }
+
+    protected void OnTriggerStay2D(Collider2D collision)
+    {
+        if (damageTickTimer <= 0)
+        {
+            FindTargetAndDealDamage(collision);
+        }
+    }
+
+    protected virtual void FindTargetAndDealDamage(Collider2D col)
+    {
+        if ((attackableLayers & (1 << col.gameObject.layer)) != 0
+            && col.transform.parent.TryGetComponent<IDamageable>(out var target))
+        {
+            damageTickTimer = damageTickCooldown;
+            hitDirection = (col.transform.position - transform.position).normalized;
+            target.TakeDamage(damage, hitDirection);
         }
     }
 }

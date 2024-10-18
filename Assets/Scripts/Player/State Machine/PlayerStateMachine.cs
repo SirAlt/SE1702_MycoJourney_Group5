@@ -22,16 +22,11 @@ public class PlayerStateMachine
         CurrentState.EnterState();
     }
 
-    public void ChangeState(PlayerState newState)
+    public void ChangeState(PlayerState newState, bool immediate = false)
     {
         Transitioning = true;
         NextState = newState;
-    }
-
-    public void ChangeStateImmediate(PlayerState newState)
-    {
-        ChangeState(newState);
-        ExecuteTransition();
+        if (immediate) ExecuteTransition();
     }
 
     public void StopTransition()
