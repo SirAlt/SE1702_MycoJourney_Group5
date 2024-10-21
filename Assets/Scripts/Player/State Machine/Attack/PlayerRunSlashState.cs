@@ -105,9 +105,9 @@ public class PlayerRunSlashState : PlayerRunState, IAttackState
 
     public void ActivateAttack()
     {
-        player.RunSlash.Activate();
+        player.RunSlash.SetActive(true);
         player.TimeSlashActivated = Time.time;
     }
 
-    public void DeactivateAttack() => player.RunSlash.Deactivate();
+    public void DeactivateAttack() => player.RunSlash.SetActive(false);
 }

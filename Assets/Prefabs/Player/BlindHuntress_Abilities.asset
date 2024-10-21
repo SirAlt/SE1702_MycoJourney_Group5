@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BlindHuntress_Abilities
   m_EditorClassIdentifier: 
   WallSlideLearnt: 1
-  WallSlideGravityModifier: 1.5
+  WallSlideGravityModifier: 0.175
   WallJumpLearnt: 1
   WallJumpPower: 0
   WallJumpAngle: 20
@@ -25,4 +25,4 @@ MonoBehaviour:
   AirDashCharges: 1
   InvincibleDash: 0
   RechargeDashesOnWall: 1
-  SlashCooldown: 0.3
+  SlashCooldown: 0.05

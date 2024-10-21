@@ -72,9 +72,9 @@ public class PlayerDashSlashState : PlayerDashState, IAttackState
 
     public void ActivateAttack()
     {
-        player.DashSlash.Activate();
+        player.DashSlash.SetActive(true);
         player.TimeSlashActivated = Time.time;
     }
 
-    public void DeactivateAttack() => player.DashSlash.Deactivate();
+    public void DeactivateAttack() => player.DashSlash.SetActive(false);
 }

@@ -1,10 +1,11 @@
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 [DefaultExecutionOrder(0)]
 [RequireComponent(typeof(InputManager), typeof(BodyContacts))]
 [RequireComponent(typeof(IMovement), typeof(BoxCollider2D))]
 [RequireComponent(typeof(Animator))]
-public class PlayerController : MonoBehaviour, IMoveable, IDamageable
+public class PlayerController : MonoBehaviour, IMoveable, IFerriable, IDamageable
 {
     [field: SerializeField] public PlayerStats Stats { get; private set; }
     [field: SerializeField] public PlayerAbilities Abilities { get; private set; }
@@ -76,7 +77,7 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
 
     public float TimeFlinchStarted { get; set; } = Mathf.NegativeInfinity;
 
-    public bool IsFacingRight => transform.rotation.eulerAngles.y == 0f;
+    public bool IsFacingRight => transform.eulerAngles.y == 0f;
 
     public bool IsTurningAround => (IsFacingRight && Input.Move.x < 0) || (!IsFacingRight && Input.Move.x > 0);
 
@@ -97,6 +98,31 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
             Land(immediate);
         else
             StateMachine.ChangeState(NaturalFallState, immediate);
+    }
+
+    public void PromptRetry()
+    {
+        // TODO: Show 'Retry?' menu.
+        Respawn();
+    }
+
+    public void Respawn()
+    {
+        Invoke(nameof(ExecuteRespawn), Stats.RespawnDelay);
+    }
+
+    private void ExecuteRespawn()
+    {
+        transform.position = CheckpointSystem.Instance.LastCheckpoint.transform.position;
+
+        ReturnToNeutral();
+
+        CurrentHealth = MaxHealth;
+        FX.UpdateHealthBar();
+
+        Hurtbox.enabled = true;
+        Hurtbox.GainInvincibility(Stats.PostRespawnInvincibilityDuration);
+        FX.StartFlicker(Stats.PostRespawnInvincibilityDuration);
     }
 
     #endregion
@@ -184,6 +210,19 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
 
     #endregion
 
+    #region IFerriable
+
+    private Rigidbody2D _rb;
+    [HideInInspector] public Vector2 FramePlatformMovement;
+
+    public void MoveAlong(Vector2 path)
+    {
+        //_rb.position += path;
+        FramePlatformMovement += path;
+    }
+
+    #endregion
+
     #region IDamageable
 
     [field: SerializeField] public float MaxHealth { get; private set; }
@@ -200,7 +239,7 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
         CurrentHealth -= damage;
         LastHitDirection = direction;
 
-        FX.UpdateHealthBar(CurrentHealth, MaxHealth);
+        FX.UpdateHealthBar();
 
         if (CurrentHealth > 0)
         {
@@ -221,6 +260,12 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
 
     public void Die()
     {
+        // In cases of instant-kill effects.
+        if (CurrentHealth > 0)
+        {
+            CurrentHealth = 0;
+            FX.UpdateHealthBar();
+        }
         NotifyAnimationEventTriggered(AnimationTriggerType.DyingStart);
     }
 
@@ -235,7 +280,7 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
     // It was Unity that forced a mutable struct on us.
     [HideInInspector] public Vector2 FrameVelocity;
 
-    [HideInInspector] public IMovement Mover { get; private set; }
+    public IMovement Mover { get; private set; }
 
     private void Awake()
     {
@@ -269,6 +314,7 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
 
         Mover = GetComponent<IMovement>();
         CollisionBox = GetComponent<BoxCollider2D>();
+        _rb = CollisionBox.attachedRigidbody;
     }
 
     private void Start()
@@ -287,6 +333,10 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
     private void FixedUpdate()
     {
         StateMachine.PhysicsUpdate();
+
+        _rb.position += FramePlatformMovement;
+        FramePlatformMovement = Vector2.zero;
+
         Mover.Move(FrameVelocity);
         Mover.EnvironmentVelocity = Vector2.zero;
     }

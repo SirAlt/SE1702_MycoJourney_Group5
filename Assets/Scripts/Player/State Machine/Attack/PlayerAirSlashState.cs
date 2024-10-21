@@ -122,9 +122,9 @@ public class PlayerAirSlashState : PlayerAirState, IAttackState
 
     public void ActivateAttack()
     {
-        player.AirSlash.Activate();
+        player.AirSlash.SetActive(true);
         player.TimeSlashActivated = Time.time;
     }
 
-    public void DeactivateAttack() => player.AirSlash.Deactivate();
+    public void DeactivateAttack() => player.AirSlash.SetActive(false);
 }

@@ -36,7 +36,7 @@ public class BodyContacts : MonoBehaviour
     {
         var _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
 
-        CheckGround();
+        CheckSolidGround();
         CheckCeiling();
         CheckWall();
         CheckOneWayPlatform();
@@ -57,7 +57,7 @@ public class BodyContacts : MonoBehaviour
 
     public bool DropThrough { get; set; }
 
-    private void CheckGround()
+    private void CheckSolidGround()
     {
         Physics2D.queriesStartInColliders = true;
         SolidGround = _collider.Cast(Vector2.down, _groundFilter, _hits, Configurations.GroundTouchDistance) > 0;

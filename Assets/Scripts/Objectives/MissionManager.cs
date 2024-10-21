@@ -14,7 +14,6 @@ public class MissionManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            Initialize();
         }
         else
         {
@@ -42,7 +41,9 @@ public class MissionManager : MonoBehaviour
     private Image _blueGemMarker;
     private Image _blackGemMarker;
 
-    private GameObject _levelExit;
+    private EndPortal _levelExit;
+
+    private int _level = 1;
 
     private bool _hasRedKey;
     public bool HasRedKey
@@ -110,19 +111,6 @@ public class MissionManager : MonoBehaviour
         }
     }
 
-    private void Initialize()
-    {
-        _redKeyMarker = GameObject.FindGameObjectWithTag(RedKeyMarkerTag).GetComponent<Image>();
-        _blueKeyMarker = GameObject.FindGameObjectWithTag(BlueKeyMarkerTag).GetComponent<Image>();
-        _blackKeyMarker = GameObject.FindGameObjectWithTag(BlackKeyMarkerTag).GetComponent<Image>();
-
-        _redGemMarker = GameObject.FindGameObjectWithTag(RedGemMarkerTag).GetComponent<Image>();
-        _blueGemMarker = GameObject.FindGameObjectWithTag(BlueGemMarkerTag).GetComponent<Image>();
-        _blackGemMarker = GameObject.FindGameObjectWithTag(BlackGemMarkerTag).GetComponent<Image>();
-
-        _levelExit = GameObject.FindGameObjectWithTag(LevelExitTag);
-    }
-
     private void OnEnable()
     {
         SceneManager.sceneLoaded += InitLevel;
@@ -133,8 +121,18 @@ public class MissionManager : MonoBehaviour
         SceneManager.sceneLoaded -= InitLevel;
     }
 
-    private void InitLevel(Scene arg0, LoadSceneMode arg1)
+    private void InitLevel(Scene scene, LoadSceneMode sceneMode)
     {
+        _redKeyMarker = GameObject.FindGameObjectWithTag(RedKeyMarkerTag).GetComponent<Image>();
+        _blueKeyMarker = GameObject.FindGameObjectWithTag(BlueKeyMarkerTag).GetComponent<Image>();
+        _blackKeyMarker = GameObject.FindGameObjectWithTag(BlackKeyMarkerTag).GetComponent<Image>();
+
+        _redGemMarker = GameObject.FindGameObjectWithTag(RedGemMarkerTag).GetComponent<Image>();
+        _blueGemMarker = GameObject.FindGameObjectWithTag(BlueGemMarkerTag).GetComponent<Image>();
+        _blackGemMarker = GameObject.FindGameObjectWithTag(BlackGemMarkerTag).GetComponent<Image>();
+
+        _levelExit = GameObject.FindGameObjectWithTag(LevelExitTag).GetComponentInChildren<EndPortal>();
+
         HasRedKey = false;
         HasBlueKey = false;
         HasBlackKey = false;
@@ -142,6 +140,8 @@ public class MissionManager : MonoBehaviour
         HasRedGem = false;
         HasBlueGem = false;
         HasBlackGem = false;
+
+        _levelExit.SetActive(false);
     }
 
     public void OnKeyObtained(ArtifactType type)
@@ -179,6 +179,17 @@ public class MissionManager : MonoBehaviour
         {
             _levelExit.SetActive(true);
         }
+    }
+
+    public void OnLevelCompleted()
+    {
+        if (_level == 4)
+        {
+            // TODO: Show victory screen
+            return;
+        }
+
+        SceneManager.LoadScene($"Level" + ++_level);
     }
 }
 

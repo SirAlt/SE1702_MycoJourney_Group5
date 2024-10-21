@@ -51,7 +51,8 @@ public abstract class PlayerState
     {
         if (triggerType == PlayerController.AnimationTriggerType.Flinch)
         {
-            if (player.BodyContacts.Ground)
+            // Check vertical velocity to prevent entering ground flinch when hit on the 1st frame a jump.
+            if (player.BodyContacts.Ground && player.FrameVelocity.y <= 0)
                 stateMachine.ChangeState(player.GroundFlinchState);
             else
                 stateMachine.ChangeState(player.AirFlinchState);
