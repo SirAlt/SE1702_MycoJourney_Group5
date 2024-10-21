@@ -27,7 +27,8 @@ public class PlayerDeathState : PlayerState
     {
         if (triggerType == PlayerController.AnimationTriggerType.DeathComplete)
         {
-            // TODO: Respawn at checkpoint? Quit level? Show retry menu?
+            player.PromptRetry();
+            return;
         }
     }
 }

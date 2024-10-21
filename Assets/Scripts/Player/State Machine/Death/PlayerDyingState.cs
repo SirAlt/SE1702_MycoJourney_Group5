@@ -12,9 +12,14 @@ public class PlayerDyingState : PlayerState
     public override void EnterState()
     {
         base.EnterState();
+
         _animCompleted = false;
         _safeguardTimer = 0f;
+
         if (player.BodyContacts.Ground) player.FrameVelocity.x = 0f;
+        player.Hurtbox.enabled = false;
+
+        player.FX.StopAllEffects();
         player.Animator.Play(PlayerController.DyingAnim, -1, 0f);
     }
 
@@ -27,7 +32,7 @@ public class PlayerDyingState : PlayerState
                 stateMachine.ChangeState(player.DeathState);
                 return;
             }
-            _safeguardTimer += Time.time;
+            _safeguardTimer += Time.fixedDeltaTime;
         }
     }
 
@@ -38,7 +43,7 @@ public class PlayerDyingState : PlayerState
 
     public override void OnAnimationEventTriggered(PlayerController.AnimationTriggerType triggerType)
     {
-        // Ignore universal triggers like 'Flinch' and 'DyingStart' ones.
+        // Ignore universal triggers like 'Flinch' and 'DyingStart'.
         if (triggerType == PlayerController.AnimationTriggerType.DyingEnd)
         {
             _animCompleted = true;

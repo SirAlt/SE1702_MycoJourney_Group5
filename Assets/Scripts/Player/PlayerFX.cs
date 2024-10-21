@@ -41,9 +41,14 @@ public class PlayerFX : MonoBehaviour
         _sprite.enabled = true;
     }
 
-    public void UpdateHealthBar(float currentHealth, float maxHealth)
+    public void UpdateHealthBar()
     {
-        _healthBar.value = currentHealth / maxHealth;
+        _healthBar.value = _player.CurrentHealth / _player.MaxHealth;
+    }
+
+    public void StopAllEffects()
+    {
+        StopFlicker();
     }
 
 #if UNITY_EDITOR

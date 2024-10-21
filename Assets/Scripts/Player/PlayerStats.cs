@@ -198,7 +198,7 @@ public class PlayerStats : ScriptableObject
 
 
     [Header("Post-damage Invincibility")]
-    [Tooltip("How long the invinciblity the character receives after taking damage lasts.")]
+    [Tooltip("How long the invinciblity the character gets after taking damage lasts.")]
     public float PostDamageInvincibilityDuration;
 
     [Tooltip("How fast the character flickers during certain types of invinciblity.")]
@@ -208,4 +208,12 @@ public class PlayerStats : ScriptableObject
     [Header("Death")]
     [Tooltip("Normally the character would need to land to complete the death process. This sets a safety time limit in case of infinite fall.")]
     public float TransitionToDeathSafeguardTimeLimit;
+
+
+    [Header("Respawn")]
+    [Tooltip("The amount of time to wait, after completing death animation, to respawn at the last checkpoint.")]
+    public float RespawnDelay;
+
+    [Tooltip("How long the invinciblity the character gets right after respawning lasts.")]
+    public float PostRespawnInvincibilityDuration;
 }

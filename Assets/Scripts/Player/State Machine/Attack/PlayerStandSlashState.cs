@@ -69,9 +69,9 @@ public class PlayerStandSlashState : PlayerGroundState, IAttackState
 
     public void ActivateAttack()
     {
-        player.StandSlash.Activate();
+        player.StandSlash.SetActive(true);
         player.TimeSlashActivated = Time.time;
     }
 
-    public void DeactivateAttack() => player.StandSlash.Deactivate();
+    public void DeactivateAttack() => player.StandSlash.SetActive(false);
 }

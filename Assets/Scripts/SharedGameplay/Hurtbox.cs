@@ -3,8 +3,8 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider2D))]
 public class Hurtbox : MonoBehaviour
 {
-    [HideInInspector] public BoxCollider2D Collider;
-    [HideInInspector] public bool HasInvincibility;
+    public BoxCollider2D Collider { get; private set; }
+    public bool HasInvincibility { get; private set; }
 
     private float _timeToEndInvincibility;
 
