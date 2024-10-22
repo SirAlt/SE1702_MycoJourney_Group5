@@ -234,8 +234,6 @@ public class PlayerController : MonoBehaviour, IMoveable, IFerriable, IDamageabl
 
     public void TakeDamage(float damage, Vector2 direction)
     {
-        if (Hurtbox.HasInvincibility) return;
-
         CurrentHealth -= damage;
         LastHitDirection = direction;
 
@@ -344,8 +342,8 @@ public class PlayerController : MonoBehaviour, IMoveable, IFerriable, IDamageabl
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        if (Stats == null) Debug.LogWarning($"Please assign a {nameof(PlayerStats)} asset to the Player Controller's Stats slot", this);
-        if (Abilities == null) Debug.LogWarning($"Please assign a {nameof(PlayerAbilities)} asset to the Player Controller's Abilties slot", this);
+        if (Stats == null) Debug.LogWarning($"Please assign a {nameof(PlayerStats)} asset to the Player Controller's Stats slot of [ {gameObject.name} ].", this);
+        if (Abilities == null) Debug.LogWarning($"Please assign a {nameof(PlayerAbilities)} asset to the Player Controller's Abilties slot of [ {gameObject.name} ].", this);
     }
 #endif
 }

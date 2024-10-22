@@ -53,7 +53,7 @@ public class PlayerStats : ScriptableObject
     public float JumpEndEarlyGravityModifier = 3;
 
     [Tooltip("The smallest amount that must pass before jump cut has any effect.")]
-    public float JumpCutOffPoint;
+    public float JumpCutoffPoint;
 
     [Tooltip("The time window for cutting a jump short. Past this point, the jump will reach max height even if the jump key is not held.")]
     public float JumpEndEarlyWindow;
@@ -101,7 +101,7 @@ public class PlayerStats : ScriptableObject
 
     [Header("Wall Jump")]
     [Tooltip("The amount of time the character is locked in animation at the start of a wall jump.")]
-    public float WallJumpCutOffPoint;
+    public float WallJumpCutoffPoint;
 
     [Tooltip("Length of the period of time where the character strictly follows a wall jump's path, ignoring gravity. Can be interrupted by ending the jump early.")]
     public float WallJumpInitialPeriod;
@@ -191,10 +191,13 @@ public class PlayerStats : ScriptableObject
     public bool CanJumpRecoverFromFlinch;
 
     [Tooltip("The amount of time during a flinch before jump recovery becomes available.")]
-    public float FlinchRecoveryCutOffTime;
+    public float FlinchRecoveryCutoffTime;
 
     [Tooltip("The number of frames a get-up action takes.")]
     public int GetUpFrameCount;
+
+    [Tooltip("Whether the character is invincible during get-up.")]
+    public bool InvincibleGetUp;
 
 
     [Header("Post-damage Invincibility")]

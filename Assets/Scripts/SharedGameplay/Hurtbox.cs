@@ -4,8 +4,8 @@ using UnityEngine;
 public class Hurtbox : MonoBehaviour
 {
     public BoxCollider2D Collider { get; private set; }
-    public bool HasInvincibility { get; private set; }
 
+    public bool _hasInvincibility;
     private float _timeToEndInvincibility;
 
     private void Awake()
@@ -15,15 +15,21 @@ public class Hurtbox : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (HasInvincibility && Time.time >= _timeToEndInvincibility)
+        if (_hasInvincibility && Time.time >= _timeToEndInvincibility)
         {
-            HasInvincibility = false;
+            RemoveInvincibility();
         }
     }
 
-    public void GainInvincibility(float duration = 0f)
+    public void GainInvincibility(float duration = -1.0f)
     {
-        if (!HasInvincibility) HasInvincibility = true;
+        if (duration == 0f) return;
+
+        if (!_hasInvincibility)
+        {
+            _hasInvincibility = true;
+            Collider.enabled = false;
+        }
 
         if (duration < 0f)
         {
@@ -35,5 +41,10 @@ public class Hurtbox : MonoBehaviour
         }
     }
 
-    public void RemoveInvincibility() => HasInvincibility = false;
+    public void RemoveInvincibility()
+    {
+        _hasInvincibility = false;
+        _timeToEndInvincibility = 0f;
+        Collider.enabled = true;
+    }
 }

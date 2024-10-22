@@ -448,7 +448,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4096
   damage: 12
-  damageTickCooldown: 0
+  damageTickCooldown: 0.2
   repeatedHitBug: 0
 --- !u!1 &1493992146345326285
 GameObject:
@@ -544,7 +544,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4096
   damage: 6
-  damageTickCooldown: 0
+  damageTickCooldown: 0.2
   repeatedHitBug: 0
 --- !u!1 &5921916025187759805
 GameObject:
@@ -730,7 +730,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4096
   damage: 4
-  damageTickCooldown: 0
+  damageTickCooldown: 0.2
   repeatedHitBug: 0
 --- !u!1 &7182978655249773461
 GameObject:
@@ -826,7 +826,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4096
   damage: 5
-  damageTickCooldown: 0
+  damageTickCooldown: 0.2
   repeatedHitBug: 0
 --- !u!1 &8456569474857873164
 GameObject:

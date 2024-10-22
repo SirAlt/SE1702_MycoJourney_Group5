@@ -81,7 +81,7 @@ public abstract class PlayerJumpState : PlayerAirState, IJumpState
 
         if (!jumpEndedEarly) CheckIfJumpEndedEarly();
 
-        if (jumpEndedEarly && player.TimeJumpStarted + player.Stats.JumpCutOffPoint <= Time.time)
+        if (jumpEndedEarly && player.TimeJumpStarted + player.Stats.JumpCutoffPoint <= Time.time)
         {
             gravity *= player.Stats.JumpEndEarlyGravityModifier;
         }

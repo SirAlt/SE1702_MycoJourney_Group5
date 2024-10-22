@@ -84,6 +84,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   damage: 16
+  damageTickCooldown: 0.2
+  repeatedHitBug: 0
 --- !u!1 &4407016909581424778
 GameObject:
   m_ObjectHideFlags: 0
@@ -305,7 +307,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59c992018a69a0a47924ef33123fa73c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Config>k__BackingField: {fileID: 11400000, guid: 688d0d3d769d103478a1d6ebbb506dcf, type: 2}
+  <Configurations>k__BackingField: {fileID: 0}
 --- !u!1 &7241168692512855041
 GameObject:
   m_ObjectHideFlags: 0
