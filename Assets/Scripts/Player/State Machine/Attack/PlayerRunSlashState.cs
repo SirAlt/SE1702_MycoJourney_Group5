@@ -88,28 +88,26 @@ public class PlayerRunSlashState : PlayerRunState, IAttackState
 
     public override void OnAnimationEventTriggered(PlayerController.AnimationTriggerType triggerType)
     {
+        base.OnAnimationEventTriggered(triggerType);
         switch (triggerType)
         {
             case PlayerController.AnimationTriggerType.AttackActiveFramesStarted:
                 ActivateAttack();
-                goto default;
+                break;
             case PlayerController.AnimationTriggerType.AttackActiveFramesEnded:
                 DeactivateAttack();
-                goto default;
+                break;
             case PlayerController.AnimationTriggerType.AttackFinished:
-                player.LandImmediate();
-                goto default;
-            default:
-                base.OnAnimationEventTriggered(triggerType);
+                player.Land(immediate: true);
                 break;
         }
     }
 
     public void ActivateAttack()
     {
-        player.RunSlash.Activate();
+        player.RunSlash.SetActive(true);
         player.TimeSlashActivated = Time.time;
     }
 
-    public void DeactivateAttack() => player.RunSlash.Deactivate();
+    public void DeactivateAttack() => player.RunSlash.SetActive(false);
 }

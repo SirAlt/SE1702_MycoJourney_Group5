@@ -1,10 +1,11 @@
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 [DefaultExecutionOrder(0)]
 [RequireComponent(typeof(InputManager), typeof(BodyContacts))]
 [RequireComponent(typeof(IMovement), typeof(BoxCollider2D))]
 [RequireComponent(typeof(Animator))]
-public class PlayerController : MonoBehaviour, IMoveable, IDamageable
+public class PlayerController : MonoBehaviour, IMoveable, IFerriable, IDamageable
 {
     [field: SerializeField] public PlayerStats Stats { get; private set; }
     [field: SerializeField] public PlayerAbilities Abilities { get; private set; }
@@ -36,6 +37,13 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
     public PlayerAirSlashState AirSlashState { get; private set; }
     public PlayerDashSlashState DashSlashState { get; private set; }
 
+    public PlayerFlinchState GroundFlinchState { get; private set; }
+    public PlayerAirFlinchState AirFlinchState { get; private set; }
+    public PlayerGetUpState GetUpState { get; private set; }
+
+    public PlayerDyingState DyingState { get; private set; }
+    public PlayerDeathState DeathState { get; private set; }
+
     #endregion
 
     #region Helpers
@@ -44,8 +52,8 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
     public float TimeJumpStarted { get; set; } = Mathf.NegativeInfinity;  // Initial jump period + Variable jump height + Anti-mash + Wall-jump initial path
 
     public bool HasJumpInput => Input.JumpPressedThisFrame || (Input.TimeJumpWasPressed + Stats.JumpBuffer > Time.time);
-    public bool IsInJumpRefractoryPeriod => TimeJumpStarted + Stats.JumpRefractoryPeriod > Time.time;
-    public bool HasValidJumpInput => HasJumpInput && !IsInJumpRefractoryPeriod;
+    public bool JumpOnCooldown => TimeJumpStarted + Stats.JumpCooldown > Time.time;
+    public bool HasValidJumpInput => HasJumpInput && !JumpOnCooldown;
 
     public bool IsMovingAgainstWall => (BodyContacts.WallLeft && Input.Move.x < 0) || (BodyContacts.WallRight && Input.Move.x > 0);
 
@@ -67,27 +75,54 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
 
     public float TimeDropThroughStarted { get; set; } = Mathf.NegativeInfinity;
 
-    public bool IsFacingRight => transform.rotation.eulerAngles.y == 0f;
+    public float TimeFlinchStarted { get; set; } = Mathf.NegativeInfinity;
+
+    public bool IsFacingRight => transform.eulerAngles.y == 0f;
 
     public bool IsTurningAround => (IsFacingRight && Input.Move.x < 0) || (!IsFacingRight && Input.Move.x > 0);
 
     public void FaceLeft() => transform.rotation = Quaternion.Euler(0f, 180f, 0f);
     public void FaceRight() => transform.rotation = Quaternion.Euler(0f, 0f, 0f);
 
-    public void Land()
+    public void Land(bool immediate = false)
     {
         if (Input.Move.x != 0)
-            StateMachine.ChangeState(RunState);
+            StateMachine.ChangeState(RunState, immediate);
         else
-            StateMachine.ChangeState(IdleState);
+            StateMachine.ChangeState(IdleState, immediate);
     }
 
-    public void LandImmediate()
+    public void ReturnToNeutral(bool immediate = false)
     {
-        if (Input.Move.x != 0)
-            StateMachine.ChangeStateImmediate(RunState);
+        if (BodyContacts.Ground)
+            Land(immediate);
         else
-            StateMachine.ChangeStateImmediate(IdleState);
+            StateMachine.ChangeState(NaturalFallState, immediate);
+    }
+
+    public void PromptRetry()
+    {
+        // TODO: Show 'Retry?' menu.
+        Respawn();
+    }
+
+    public void Respawn()
+    {
+        Invoke(nameof(ExecuteRespawn), Stats.RespawnDelay);
+    }
+
+    private void ExecuteRespawn()
+    {
+        transform.position = CheckpointSystem.Instance.LastCheckpoint.transform.position;
+
+        ReturnToNeutral();
+
+        CurrentHealth = MaxHealth;
+        FX.UpdateHealthBar();
+
+        Hurtbox.enabled = true;
+        Hurtbox.GainInvincibility(Stats.PostRespawnInvincibilityDuration);
+        FX.StartFlicker(Stats.PostRespawnInvincibilityDuration);
     }
 
     #endregion
@@ -105,6 +140,7 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
     public const string GroundJumpAnim = "Jump";
     public const string AirJumpAnim = "Jump";
     public const string WallJumpAnim = "Jump";
+    public const string RecoveryJumpAnim = "Jump";
 
     public const string NaturalFallAnim = "Fall";
     public const string JumpFallAnim = "Fall";
@@ -121,7 +157,13 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
     public const string AirSlashAnim = "Jump Attack";
     public const string DashSlashAnim = "Dash Attack";
 
-    public const string FlinchAnim = "Flinch";
+    public const string GroundFlinchAnim = "Flinch";
+    public const string GroundFlinchEndAnim = "Flinch End";
+    public const string AirFlinchAnim = "Flinch";
+    public const string AirFlinchEndAnim = "Flinch End";
+
+    public const string DyingAnim = "Dying";
+    public const string DyingFallAnim = "Dying Fall";
     public const string DeathAnim = "Death";
 
     public enum AnimationTriggerType
@@ -129,6 +171,11 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
         AttackActiveFramesStarted,
         AttackActiveFramesEnded,
         AttackFinished,
+
+        Flinch,
+        DyingStart,
+        DyingEnd,
+        DeathComplete
     }
 
     private void NotifyAnimationEventTriggered(AnimationTriggerType triggerType)
@@ -163,23 +210,63 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
 
     #endregion
 
+    #region IFerriable
+
+    private Rigidbody2D _rb;
+    [HideInInspector] public Vector2 FramePlatformMovement;
+
+    public void MoveAlong(Vector2 path)
+    {
+        //_rb.position += path;
+        FramePlatformMovement += path;
+    }
+
+    #endregion
+
     #region IDamageable
 
     [field: SerializeField] public float MaxHealth { get; private set; }
     public float CurrentHealth { get; private set; }
 
-    public void TakeDamage(float damage)
+    public Vector2 LastHitDirection { get; private set; }
+
+    public void TakeDamage(float damage) => TakeDamage(damage, Vector2.zero);
+
+    public void TakeDamage(float damage, Vector2 direction)
     {
+        if (Hurtbox.HasInvincibility) return;
+
         CurrentHealth -= damage;
-        if (CurrentHealth <= 0)
+        LastHitDirection = direction;
+
+        FX.UpdateHealthBar();
+
+        if (CurrentHealth > 0)
+        {
+            Flinch();
+            Hurtbox.GainInvincibility(Stats.PostDamageInvincibilityDuration);
+            FX.StartFlicker(Stats.PostDamageInvincibilityDuration);
+        }
+        else
         {
             Die();
         }
     }
 
+    private void Flinch()
+    {
+        NotifyAnimationEventTriggered(AnimationTriggerType.Flinch);
+    }
+
     public void Die()
     {
-        Destroy(gameObject);
+        // In cases of instant-kill effects.
+        if (CurrentHealth > 0)
+        {
+            CurrentHealth = 0;
+            FX.UpdateHealthBar();
+        }
+        NotifyAnimationEventTriggered(AnimationTriggerType.DyingStart);
     }
 
     #endregion
@@ -193,7 +280,7 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
     // It was Unity that forced a mutable struct on us.
     [HideInInspector] public Vector2 FrameVelocity;
 
-    [HideInInspector] public IMovement Mover { get; private set; }
+    public IMovement Mover { get; private set; }
 
     private void Awake()
     {
@@ -206,6 +293,7 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
         GroundJumpState = new PlayerGroundJumpState(this, StateMachine);
         AirJumpState = new PlayerAirJumpState(this, StateMachine);
         WallJumpState = new PlayerWallJumpState(this, StateMachine);
+        GetUpState = new PlayerGetUpState(this, StateMachine);
         JumpFallState = new PlayerJumpFallState(this, StateMachine);
         NaturalFallState = new PlayerNaturalFallState(this, StateMachine);
         DropThroughFallState = new PlayerDropThroughFallState(this, StateMachine);
@@ -216,12 +304,17 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
         RunSlashState = new PlayerRunSlashState(this, StateMachine);
         AirSlashState = new PlayerAirSlashState(this, StateMachine);
         DashSlashState = new PlayerDashSlashState(this, StateMachine);
+        GroundFlinchState = new PlayerGroundFlinchState(this, StateMachine);
+        AirFlinchState = new PlayerAirFlinchState(this, StateMachine);
+        DyingState = new PlayerDyingState(this, StateMachine);
+        DeathState = new PlayerDeathState(this, StateMachine);
 
         Animator = GetComponent<Animator>();
         FX = GetComponent<PlayerFX>();
 
         Mover = GetComponent<IMovement>();
         CollisionBox = GetComponent<BoxCollider2D>();
+        _rb = CollisionBox.attachedRigidbody;
     }
 
     private void Start()
@@ -237,16 +330,16 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
         StateMachine.FrameUpdate();
     }
 
-    #region Physics
-
     private void FixedUpdate()
     {
         StateMachine.PhysicsUpdate();
+
+        _rb.position += FramePlatformMovement;
+        FramePlatformMovement = Vector2.zero;
+
         Mover.Move(FrameVelocity);
         Mover.EnvironmentVelocity = Vector2.zero;
     }
-
-    #endregion
 
 #if UNITY_EDITOR
     private void OnValidate()

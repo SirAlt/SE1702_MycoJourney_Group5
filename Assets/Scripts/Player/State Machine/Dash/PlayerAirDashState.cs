@@ -34,20 +34,17 @@
         base.CheckForTransition();
     }
 
-
-    public override void OnAnimationEventTriggered(PlayerController.AnimationTriggerType triggerType)
-    {
-        base.OnAnimationEventTriggered(triggerType);
-        // Flinch -> AirFlinchState
-    }
+    #region Air State
 
     public void HandleAirControl()
     {
-        // Do nothing. Character cannot change direction while dashing.
+        // Do nothing. Character cannot move while dashing.
     }
 
     public void HandleGravity()
     {
-        // Do nothing. Gravity is ignored during a dash.
+        // Do nothing. Gravity is ignored while dashing.
     }
+
+    #endregion
 }

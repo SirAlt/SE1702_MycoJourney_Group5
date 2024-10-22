@@ -3,24 +3,37 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider2D))]
 public class Hurtbox : MonoBehaviour
 {
-    [HideInInspector] public BoxCollider2D Collider;
+    public BoxCollider2D Collider { get; private set; }
+    public bool HasInvincibility { get; private set; }
+
+    private float _timeToEndInvincibility;
 
     private void Awake()
     {
         Collider = GetComponent<BoxCollider2D>();
     }
 
-    public void BeginInvincibility(float duration = -1)
+    private void FixedUpdate()
     {
-        DisableHurtbox();
-        if (duration > 0) Invoke(nameof(EnableHurtbox), duration);
+        if (HasInvincibility && Time.time >= _timeToEndInvincibility)
+        {
+            HasInvincibility = false;
+        }
     }
 
-    public void EndInvincibility()
+    public void GainInvincibility(float duration = 0f)
     {
-        EnableHurtbox();
+        if (!HasInvincibility) HasInvincibility = true;
+
+        if (duration < 0f)
+        {
+            _timeToEndInvincibility = Mathf.Infinity;
+        }
+        else if (Time.time + duration > _timeToEndInvincibility)
+        {
+            _timeToEndInvincibility = Time.time + duration;
+        }
     }
 
-    private void EnableHurtbox() => Collider.enabled = true;
-    private void DisableHurtbox() => Collider.enabled = false;
+    public void RemoveInvincibility() => HasInvincibility = false;
 }
