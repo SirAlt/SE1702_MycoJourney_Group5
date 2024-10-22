@@ -20,7 +20,7 @@ public abstract class PlayerWallState : PlayerState, IWallState
         base.ExitState();
         if (stateMachine.NextState is IWallState) return;
         player.TimeLeftWall = Time.time;
-        player.LastWallContactSide = player.BodyContacts.WallLeft ? -1 : 1;     // Prioritize left-to-right movement -> Prioritize left wall contact.
+        player.LastWallContactSide = player.BodyContacts.WallLeft ? -1 : 1; // Prioritize left-to-right movement -> Prioritize left wall contact.
     }
 
     public override void CheckForTransition()
@@ -47,11 +47,5 @@ public abstract class PlayerWallState : PlayerState, IWallState
             stateMachine.ChangeState(player.WallJumpState);
             return;
         }
-    }
-
-    public override void OnAnimationEventTriggered(PlayerController.AnimationTriggerType triggerType)
-    {
-        base.OnAnimationEventTriggered(triggerType);
-        // if Flinch -> AirFlinchState
     }
 }

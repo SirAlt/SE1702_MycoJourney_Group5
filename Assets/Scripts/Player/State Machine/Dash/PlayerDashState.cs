@@ -61,7 +61,7 @@ public class PlayerDashState : PlayerState, IDashState
     protected virtual void GrantInvincibility()
     {
         invincibilityGranted = true;
-        player.Hurtbox.BeginInvincibility();
+        player.Hurtbox.GainInvincibility();
     }
 
     public override void ExitState()
@@ -84,7 +84,7 @@ public class PlayerDashState : PlayerState, IDashState
     protected virtual void RemoveInvincibility()
     {
         invincibilityGranted = false;
-        player.Hurtbox.EndInvincibility();
+        player.Hurtbox.RemoveInvincibility();
     }
 
     public override void CheckForTransition()
@@ -115,16 +115,8 @@ public class PlayerDashState : PlayerState, IDashState
         if (!dashEndedEarly) CheckIfDashEndedEarly();
         if (dashEndedEarly || player.TimeDashStarted + player.Stats.DashDuration <= Time.time)
         {
-            if (player.BodyContacts.Ground)
-            {
-                player.Land();
-                return;
-            }
-            else
-            {
-                stateMachine.ChangeState(player.NaturalFallState);
-                return;
-            }
+            player.ReturnToNeutral();
+            return;
         }
     }
 

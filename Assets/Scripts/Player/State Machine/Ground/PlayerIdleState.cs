@@ -17,6 +17,12 @@ public class PlayerIdleState : PlayerGroundState
             case PlayerAirDashState:
                 player.Animator.Play(PlayerController.AirDashEndAnim, -1, 0f);
                 break;
+            case PlayerGroundFlinchState:
+                player.Animator.Play(PlayerController.GroundFlinchEndAnim, -1, 0f);
+                break;
+            case PlayerAirFlinchState:
+                player.Animator.Play(PlayerController.AirFlinchEndAnim, -1, 0f);
+                break;
             default:
                 player.Animator.Play(PlayerController.IdleAnim, -1, 0f);
                 break;

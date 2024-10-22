@@ -34,7 +34,7 @@ public class PlayerStats : ScriptableObject
 
 
     [Header("Jump")]
-    [Tooltip("_frameVelocity gained instantly at the start of a jump.")]
+    [Tooltip("Velocity gained instantly at the start of a jump.")]
     public float JumpPower;
 
     [Tooltip("Continual upward acceleration applied during the beginning portion of a jump.")]
@@ -52,6 +52,9 @@ public class PlayerStats : ScriptableObject
     [Tooltip("The gravity multiplier added when jump is released early.")]
     public float JumpEndEarlyGravityModifier = 3;
 
+    [Tooltip("The smallest amount that must pass before jump cut has any effect.")]
+    public float JumpCutOffPoint;
+
     [Tooltip("The time window for cutting a jump short. Past this point, the jump will reach max height even if the jump key is not held.")]
     public float JumpEndEarlyWindow;
 
@@ -61,7 +64,7 @@ public class PlayerStats : ScriptableObject
     public float JumpBuffer;
 
     [Tooltip("The amount of time jump input is ignored after executing a jump. Prevents accidental jumps caused by button mashing.")]
-    public float JumpRefractoryPeriod;
+    public float JumpCooldown;
 
 
     [Header("Coyote Time")]
@@ -98,7 +101,7 @@ public class PlayerStats : ScriptableObject
 
     [Header("Wall Jump")]
     [Tooltip("The amount of time the character is locked in animation at the start of a wall jump.")]
-    public float WallJumpLockinTime;
+    public float WallJumpCutOffPoint;
 
     [Tooltip("Length of the period of time where the character strictly follows a wall jump's path, ignoring gravity. Can be interrupted by ending the jump early.")]
     public float WallJumpInitialPeriod;
@@ -157,4 +160,60 @@ public class PlayerStats : ScriptableObject
 
     [Tooltip("Horizontal speed while executing dash attacks.")]
     public float DashSlashMoveSpeed;
+
+
+    [Header("Flinch")]
+    [Tooltip("The amount of time the character is unable to act after getting hit on the ground.")]
+    public float GroundFlinchDuration;
+
+    [Tooltip("The distance the character is knocked back during ground flinch.")]
+    public float GroundFlinchKnockbackDistance;
+
+    [Tooltip("The speed at which the character is knocked back during ground flinch.")]
+    public float GroundFlinchKnockbackSpeed;
+
+    [Tooltip("The amount of time the character is unable to act after getting hit in the air.")]
+    public float AirFlinchDuration;
+
+    [Tooltip("The distance the character is knocked back during air flinch.")]
+    public float AirFlinchKnockbackDistance;
+
+    [Tooltip("The speed at which the character is knocked back during air flinch.")]
+    public float AirFlinchKnockbackSpeed;
+
+    [Tooltip("Upward force applied to the character at the start of an air flinch.")]
+    public float AirFlinchKnockupSpeed;
+
+    [Tooltip("Proportion of knockback speed still in effect after reaching knockback distance."), Range(0f, 1f)]
+    public float AirFlinchResidualKnockbackSpeedRatio;
+
+    [Tooltip("Whether the character can jump to recover from a flinch early.")]
+    public bool CanJumpRecoverFromFlinch;
+
+    [Tooltip("The amount of time during a flinch before jump recovery becomes available.")]
+    public float FlinchRecoveryCutOffTime;
+
+    [Tooltip("The number of frames a get-up action takes.")]
+    public int GetUpFrameCount;
+
+
+    [Header("Post-damage Invincibility")]
+    [Tooltip("How long the invinciblity the character gets after taking damage lasts.")]
+    public float PostDamageInvincibilityDuration;
+
+    [Tooltip("How fast the character flickers during certain types of invinciblity.")]
+    public float InvincibilityFlickerInterval;
+
+
+    [Header("Death")]
+    [Tooltip("Normally the character would need to land to complete the death process. This sets a safety time limit in case of infinite fall.")]
+    public float TransitionToDeathSafeguardTimeLimit;
+
+
+    [Header("Respawn")]
+    [Tooltip("The amount of time to wait, after completing death animation, to respawn at the last checkpoint.")]
+    public float RespawnDelay;
+
+    [Tooltip("How long the invinciblity the character gets right after respawning lasts.")]
+    public float PostRespawnInvincibilityDuration;
 }

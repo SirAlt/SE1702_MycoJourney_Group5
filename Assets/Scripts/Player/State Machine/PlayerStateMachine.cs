@@ -22,16 +22,11 @@ public class PlayerStateMachine
         CurrentState.EnterState();
     }
 
-    public void ChangeState(PlayerState newState)
+    public void ChangeState(PlayerState newState, bool immediate = false)
     {
         Transitioning = true;
         NextState = newState;
-    }
-
-    public void ChangeStateImmediate(PlayerState newState)
-    {
-        ChangeState(newState);
-        ExecuteTransition();
+        if (immediate) ExecuteTransition();
     }
 
     public void StopTransition()
@@ -61,16 +56,15 @@ public class PlayerStateMachine
 
     private void ExecuteTransition()
     {
-        if (Transitioning)
-        {
-            CurrentState.ExitState();
-            PrevState = CurrentState;
-            CurrentState = NextState;
-            NextState = null;
-            CurrentState.EnterState();
-            Transitioning = false;
-            //Debug.Log($"PlayerState transition: [ {PrevState.GetType().Name[6..^5]} ] >> [ {CurrentState.GetType().Name[6..^5]} ]");
-        }
+        if (!Transitioning) return;
+
+        CurrentState.ExitState();
+        PrevState = CurrentState;
+        CurrentState = NextState;
+        NextState = null;
+        CurrentState.EnterState();
+        Transitioning = false;
+        //Debug.Log($"PlayerState transition: [ {PrevState.GetType().Name[6..^5]} ] >> [ {CurrentState.GetType().Name[6..^5]} ]");
     }
 
     public void Reset()

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using static PlayerController;
 
 public abstract class PlayerState
 {
@@ -48,7 +47,21 @@ public abstract class PlayerState
         }
     }
 
-    public virtual void OnAnimationEventTriggered(AnimationTriggerType triggerType)
+    public virtual void OnAnimationEventTriggered(PlayerController.AnimationTriggerType triggerType)
     {
+        if (triggerType == PlayerController.AnimationTriggerType.Flinch)
+        {
+            // Check vertical velocity to prevent entering ground flinch when hit on the 1st frame a jump.
+            if (player.BodyContacts.Ground && player.FrameVelocity.y <= 0)
+                stateMachine.ChangeState(player.GroundFlinchState);
+            else
+                stateMachine.ChangeState(player.AirFlinchState);
+            return;
+        }
+        if (triggerType == PlayerController.AnimationTriggerType.DyingStart)
+        {
+            stateMachine.ChangeState(player.DyingState);
+            return;
+        }
     }
 }

@@ -301,6 +301,7 @@ MonoBehaviour:
   <RunSlash>k__BackingField: {fileID: 2087068943006017966}
   <AirSlash>k__BackingField: {fileID: 8115814769250397304}
   <DashSlash>k__BackingField: {fileID: 3953708255786235971}
+  FramePlatformMovement: {x: 0, y: 0}
   <MaxHealth>k__BackingField: 100
   FrameVelocity: {x: 0, y: 0}
 --- !u!114 &5103759520306719172
@@ -447,6 +448,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4096
   damage: 12
+  damageTickCooldown: 0
+  repeatedHitBug: 0
 --- !u!1 &1493992146345326285
 GameObject:
   m_ObjectHideFlags: 0
@@ -540,7 +543,9 @@ MonoBehaviour:
   attackableLayers:
     serializedVersion: 2
     m_Bits: 4096
-  damage: 5
+  damage: 6
+  damageTickCooldown: 0
+  repeatedHitBug: 0
 --- !u!1 &5921916025187759805
 GameObject:
   m_ObjectHideFlags: 0
@@ -631,7 +636,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caaa69c053d6c234b8e330eee8a76229, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Collider: {fileID: 0}
 --- !u!1 &6786179279400670461
 GameObject:
   m_ObjectHideFlags: 0
@@ -726,6 +730,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4096
   damage: 4
+  damageTickCooldown: 0
+  repeatedHitBug: 0
 --- !u!1 &7182978655249773461
 GameObject:
   m_ObjectHideFlags: 0
@@ -820,6 +826,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4096
   damage: 5
+  damageTickCooldown: 0
+  repeatedHitBug: 0
 --- !u!1 &8456569474857873164
 GameObject:
   m_ObjectHideFlags: 0

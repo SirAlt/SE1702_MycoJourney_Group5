@@ -10,6 +10,8 @@ TagManager:
   - RedGemMarker
   - BlueGemMarker
   - BlackGemMarker
+  - LevelExit
+  - HealthBar
   layers:
   - Default
   - TransparentFX
@@ -25,15 +27,15 @@ TagManager:
   - EnemyHitbox
   - EnemyHurtbox
   - EnemyDetector
-  - ObjectiveDetector
-  - 
-  - 
-  - 
+  - Objective
+  - Portal
+  - HazardHitbox
+  - CrumblingPlatform
   - OneWayPlatform
   - MovingPlatform
   - InvisWall
-  - 
-  - 
+  - PowerGem
+  - HazardDetector
   - 
   - 
   - 
