@@ -1,3 +1,4 @@
+using Assets.Scripts.Player.Events;
 using UnityEngine;
 
 public class Attack : MonoBehaviour
@@ -23,6 +24,7 @@ public class Attack : MonoBehaviour
         {
             var target = other.GetComponentInParent<IDamageable>();
             target?.TakeDamage(damage);
+     
         }
     }
 }

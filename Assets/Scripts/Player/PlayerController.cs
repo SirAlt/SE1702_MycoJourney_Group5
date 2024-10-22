@@ -1,3 +1,4 @@
+using Assets.Scripts.Player.Events;
 using UnityEngine;
 
 [DefaultExecutionOrder(0)]
@@ -171,6 +172,8 @@ public class PlayerController : MonoBehaviour, IMoveable, IDamageable
     public void TakeDamage(float damage)
     {
         CurrentHealth -= damage;
+        //
+        CharacterEvents.characterDamaged?.Invoke(gameObject, damage);
         if (CurrentHealth <= 0)
         {
             Die();

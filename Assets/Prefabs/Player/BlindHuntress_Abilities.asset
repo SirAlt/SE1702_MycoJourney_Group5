@@ -17,7 +17,7 @@ MonoBehaviour:
   WallJumpLearnt: 1
   WallJumpPower: 0
   WallJumpAngle: 20
-  AirJumpCharges: 1
+  AirJumpCharges: 99
   AirJumpPower: 0
   RechargeJumpsOnWall: 1
   DashLearnt: 1

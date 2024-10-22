@@ -25701,6 +25701,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 343070228}
     m_Modifications:
+    - target: {fileID: 2343736363360600772, guid: 007a09747a28cc9469b76b00ae7deb2e, type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4536406066839707690, guid: 007a09747a28cc9469b76b00ae7deb2e, type: 3}
       propertyPath: m_Name
       value: RedChest
@@ -25825,6 +25829,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 343070228}
     m_Modifications:
+    - target: {fileID: 1386513078814048762, guid: 2aa381db308e3ef459cd13743a29611c, type: 3}
+      propertyPath: m_SortingOrder
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4748799744784284072, guid: 2aa381db308e3ef459cd13743a29611c, type: 3}
       propertyPath: m_Name
       value: BlueChest
@@ -25925,6 +25933,10 @@ PrefabInstance:
     - target: {fileID: 6387797430347670684, guid: 17edbda20c7545e49883f7900246c9b6, type: 3}
       propertyPath: m_Name
       value: BlackChest
+      objectReference: {fileID: 0}
+    - target: {fileID: 7190774208872360362, guid: 17edbda20c7545e49883f7900246c9b6, type: 3}
+      propertyPath: m_SortingOrder
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
