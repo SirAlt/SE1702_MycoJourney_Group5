@@ -10,11 +10,11 @@ public class Hazard : Attack
         SetActive(true);
     }
 
-    protected override void DealDamage(IDamageable target, Vector2 hitDirection)
+    protected override void DealDamage(IHitReceptor target, Vector2 force)
     {
         if (instantDeath)
-            target.Die();
+            target.TakeHit(9999f, Vector2.zero, IHitReceptor.HitAttributes.InstantKill | IHitReceptor.HitAttributes.PiercesInvincibility);
         else
-            base.DealDamage(target, hitDirection);
+            base.DealDamage(target, force);
     }
 }

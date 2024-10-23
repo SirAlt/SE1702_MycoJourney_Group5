@@ -1,34 +1,23 @@
-using Assets.Scripts.Player.Events;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class HealthPickup : MonoBehaviour
 {
-    public int HealthRestore = 30;
-    // Start is called before the first frame update
-    private PlayerController _player;
+    private const string PlayerTag = "Player";
 
+    [SerializeField] private int HealthRestore = 30;
+
+    private void Update()
+    {
+        transform.eulerAngles += new Vector3(0f, 180f * Time.deltaTime, 0f);
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
-    {      
-        if (collision.gameObject.CompareTag("Player"))
+    {
+        if (collision.gameObject.CompareTag(PlayerTag)
+            && collision.TryGetComponent<IHealable>(out var target))
         {
-            if (_player.CurrentHealth > 0)
-            {
-                CharacterEvents.characterHealed.Invoke(_player.gameObject,HealthRestore);
-                _player.CurrentHealth += HealthRestore;
-                Destroy(gameObject);
-            }
+            target.Heal(HealthRestore);
+            Destroy(gameObject);
         }
-    }
-    private void FixedUpdate()
-    {
-        transform.eulerAngles += new Vector3(0f, 4f, 0f);
-    }
-    private void Awake()
-    {
-
-        _player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
     }
 }

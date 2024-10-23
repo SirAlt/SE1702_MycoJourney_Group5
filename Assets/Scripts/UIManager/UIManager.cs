@@ -1,22 +1,17 @@
-using Assets.Scripts.Player.Events;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-
     public GameObject damageTextPrefab;
     public GameObject healthTextPrefab;
-    // Start is called before the first frame update
     public Canvas gameCanvas;
-
 
     private void Awake()
     {
-        gameCanvas = FindObjectOfType<Canvas>();
+        gameCanvas = FindFirstObjectByType<Canvas>();
     }
+
     private void OnEnable()
     {
         CharacterEvents.characterDamaged += CharacterTookDamage;
@@ -31,7 +26,7 @@ public class UIManager : MonoBehaviour
 
     public void CharacterTookDamage(GameObject character, float damageReceived)
     {
-        if (character == null) return;  
+        if (character == null) return;
 
         Vector3 spawnPosition = Camera.main.WorldToScreenPoint(character.transform.position);
 
@@ -42,7 +37,7 @@ public class UIManager : MonoBehaviour
 
     public void CharacterTookHealed(GameObject character, float healthRestored)
     {
-        if (character == null) return;  
+        if (character == null) return;
 
         Vector3 spawnPosition = Camera.main.WorldToScreenPoint(character.transform.position);
 

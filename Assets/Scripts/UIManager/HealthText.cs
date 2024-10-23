@@ -1,18 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 public class HealthText : MonoBehaviour
 {
+    [SerializeField] private float movedSpeed = 75f;
+    [SerializeField] private float timeToFace = 1f;
 
-
-    public Vector3 movedSpeed = new Vector3(0,75,0);
-    RectTransform textTranform;
-    private float timeElapsed = 0f;
-    public float timeToFace = 1f;
+    private RectTransform textTranform;
+    private TextMeshProUGUI textMeshPro;
     private Color startColor;
-    TextMeshProUGUI textMeshPro;
+
+    private float timeElapsed;
 
     private void Awake()
     {
@@ -21,24 +19,15 @@ public class HealthText : MonoBehaviour
         startColor = textMeshPro.color;
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
-
-        textTranform.position += movedSpeed * Time.deltaTime;
+        textTranform.position += movedSpeed * Time.deltaTime * Vector3.up;
 
         timeElapsed += Time.deltaTime;
         if (timeElapsed < timeToFace)
-        { 
+        {
             float fadeAlpha = startColor.a * (1 - (timeElapsed / timeToFace));
             textMeshPro.color = new Color(startColor.r, startColor.g, startColor.b, fadeAlpha);
-
         }
         else
         {

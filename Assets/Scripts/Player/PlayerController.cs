@@ -1,12 +1,10 @@
-using Assets.Scripts.Player.Events;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 [DefaultExecutionOrder(0)]
 [RequireComponent(typeof(InputManager), typeof(BodyContacts))]
 [RequireComponent(typeof(IMovement), typeof(BoxCollider2D))]
 [RequireComponent(typeof(Animator))]
-public class PlayerController : MonoBehaviour, IMoveable, IFerriable, IDamageable
+public class PlayerController : MonoBehaviour, IMoveable, IFerriable, IDamageable, IHealable
 {
     [field: SerializeField] public PlayerStats Stats { get; private set; }
     [field: SerializeField] public PlayerAbilities Abilities { get; private set; }
@@ -43,7 +41,7 @@ public class PlayerController : MonoBehaviour, IMoveable, IFerriable, IDamageabl
     public PlayerGetUpState GetUpState { get; private set; }
 
     public PlayerDyingState DyingState { get; private set; }
-    public PlayerDeathState DeathState { get; private set; }
+    public PlayerDeadState DeadState { get; private set; }
 
     #endregion
 
@@ -77,6 +75,7 @@ public class PlayerController : MonoBehaviour, IMoveable, IFerriable, IDamageabl
     public float TimeDropThroughStarted { get; set; } = Mathf.NegativeInfinity;
 
     public float TimeFlinchStarted { get; set; } = Mathf.NegativeInfinity;
+    public Vector2 LastHitDirection { get; set; }
 
     public bool IsFacingRight => transform.eulerAngles.y == 0f;
 
@@ -121,7 +120,6 @@ public class PlayerController : MonoBehaviour, IMoveable, IFerriable, IDamageabl
         CurrentHealth = MaxHealth;
         FX.UpdateHealthBar();
 
-        Hurtbox.enabled = true;
         Hurtbox.GainInvincibility(Stats.PostRespawnInvincibilityDuration);
         FX.StartFlicker(Stats.PostRespawnInvincibilityDuration);
     }
@@ -226,13 +224,13 @@ public class PlayerController : MonoBehaviour, IMoveable, IFerriable, IDamageabl
 
     #region IDamageable
 
-    [field: SerializeField] public float MaxHealth { get; set; }
+    [field: SerializeField] public float MaxHealth { get; private set; }
 
     private float _currentHealth;
     public float CurrentHealth
     {
         get => _currentHealth;
-        set
+        private set
         {
             if (_currentHealth == value) return;
             _currentHealth = Mathf.Clamp(value, 0, MaxHealth);
@@ -240,16 +238,14 @@ public class PlayerController : MonoBehaviour, IMoveable, IFerriable, IDamageabl
         }
     }
 
-    public Vector2 LastHitDirection { get; private set; }
-
     public void TakeDamage(float damage) => TakeDamage(damage, Vector2.zero);
 
     public void TakeDamage(float damage, Vector2 direction)
     {
         CurrentHealth -= damage;
-        CharacterEvents.characterDamaged?.Invoke(gameObject, damage);
-        if (CurrentHealth <= 0)
         LastHitDirection = direction;
+        CharacterEvents.characterDamaged?.Invoke(gameObject, damage);
+
         if (CurrentHealth > 0)
         {
             Flinch();
@@ -279,10 +275,21 @@ public class PlayerController : MonoBehaviour, IMoveable, IFerriable, IDamageabl
 
     #endregion
 
+    #region IHealable
+
+    public void Heal(float amount)
+    {
+        if (StateMachine.CurrentState is IDeathState) return;
+        CurrentHealth += amount;
+        CharacterEvents.characterHealed?.Invoke(gameObject, amount);
+    }
+
+    #endregion
+
     public InputManager Input { get; private set; }
     public BodyContacts BodyContacts { get; private set; }
     public BoxCollider2D CollisionBox { get; private set; }
-    public Hurtbox Hurtbox { get; private set; }
+    public TraditionalHurtbox Hurtbox { get; private set; }
 
     // Exposing a field is ugly, but better than the boilerplate that is the alternative.
     // It was Unity that forced a mutable struct on us.
@@ -293,7 +300,7 @@ public class PlayerController : MonoBehaviour, IMoveable, IFerriable, IDamageabl
     private void Awake()
     {
         BodyContacts = GetComponent<BodyContacts>();
-        Hurtbox = GetComponentInChildren<Hurtbox>();
+        Hurtbox = GetComponentInChildren<TraditionalHurtbox>();
 
         StateMachine = new PlayerStateMachine();
         IdleState = new PlayerIdleState(this, StateMachine);
@@ -315,7 +322,7 @@ public class PlayerController : MonoBehaviour, IMoveable, IFerriable, IDamageabl
         GroundFlinchState = new PlayerGroundFlinchState(this, StateMachine);
         AirFlinchState = new PlayerAirFlinchState(this, StateMachine);
         DyingState = new PlayerDyingState(this, StateMachine);
-        DeathState = new PlayerDeathState(this, StateMachine);
+        DeadState = new PlayerDeadState(this, StateMachine);
 
         Animator = GetComponent<Animator>();
         FX = GetComponent<PlayerFX>();
@@ -352,8 +359,8 @@ public class PlayerController : MonoBehaviour, IMoveable, IFerriable, IDamageabl
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        if (Stats == null) Debug.LogWarning($"Please assign a {nameof(PlayerStats)} asset to the Player Controller's Stats slot of [ {gameObject.name} ].", this);
-        if (Abilities == null) Debug.LogWarning($"Please assign a {nameof(PlayerAbilities)} asset to the Player Controller's Abilties slot of [ {gameObject.name} ].", this);
+        if (Stats == null) Debug.LogWarning($"Please assign a(n) {nameof(PlayerStats)} asset to the Player Controller's Stats slot of [ {gameObject.name} ].", this);
+        if (Abilities == null) Debug.LogWarning($"Please assign a(n) {nameof(PlayerAbilities)} asset to the Player Controller's Abilties slot of [ {gameObject.name} ].", this);
     }
 #endif
 }

@@ -1,6 +1,6 @@
-using Assets.Scripts.Player.Events;
 using System.Collections.Generic;
 using UnityEngine;
+using static IHitReceptor;
 
 [RequireComponent(typeof(Collider2D))]
 public class Attack : MonoBehaviour
@@ -8,6 +8,7 @@ public class Attack : MonoBehaviour
     [SerializeField] protected LayerMask attackableLayers;
     [SerializeField] protected float damage;
     [SerializeField] protected float damageTickCooldown = 0.2f;
+    [SerializeField] protected HitAttributes hitAttributes;
 
     // Intentional "bug" where the attack deals damage again if the target leaves then re-enters its hitbox.
     [SerializeField] private bool repeatedHitBug;
@@ -66,7 +67,7 @@ public class Attack : MonoBehaviour
         }
         lastHitTimes[collision.gameObject] = Time.time;
 
-        if (collision.transform.parent.TryGetComponent<IDamageable>(out var target))
+        if (collision.TryGetComponent<IHitReceptor>(out var target))
         {
             var hitDirection = GetHitDirection(collision);
             DealDamage(target, hitDirection);
@@ -78,8 +79,8 @@ public class Attack : MonoBehaviour
         return (target.transform.position - transform.position).normalized;
     }
 
-    protected virtual void DealDamage(IDamageable target, Vector2 hitDirection)
+    protected virtual void DealDamage(IHitReceptor target, Vector2 force)
     {
-        target.TakeDamage(damage, hitDirection);
+        target.TakeHit(damage, force, hitAttributes);
     }
 }

@@ -39,8 +39,9 @@ public class PowerGem : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        // Player attacks are nested 2 levels down.
         if ((playerAttackLayers & (1 << collision.gameObject.layer)) != 0
-            && collision.transform.parent.parent.gameObject.TryGetComponent<PlayerController>(out var player))
+            && collision.transform.parent.parent.TryGetComponent<PlayerController>(out var player))
         {
             HitStop.Instance.Stop(hitStopDuration);
             player.AirJumpCharges = System.Math.Min(player.AirJumpCharges + 1, player.Abilities.AirJumpCharges);
