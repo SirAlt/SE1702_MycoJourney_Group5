@@ -65,7 +65,6 @@ public class Attack : MonoBehaviour
         }
         lastHitTimes[collision.gameObject] = Time.time;
 
-
         if (collision.transform.parent.TryGetComponent<IDamageable>(out var target))
         {
             var hitDirection = GetHitDirection(collision);

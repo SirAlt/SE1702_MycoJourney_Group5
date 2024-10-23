@@ -225,8 +225,19 @@ public class PlayerController : MonoBehaviour, IMoveable, IFerriable, IDamageabl
 
     #region IDamageable
 
-    [field: SerializeField] public float MaxHealth { get; private set; }
-    public float CurrentHealth { get; private set; }
+    [field: SerializeField] public float MaxHealth { get; set; }
+
+    private float _currentHealth;
+    public float CurrentHealth
+    {
+        get => _currentHealth;
+        set
+        {
+            if (_currentHealth == value) return;
+            _currentHealth = Mathf.Clamp(value, 0, MaxHealth);
+            FX.UpdateHealthBar();
+        }
+    }
 
     public Vector2 LastHitDirection { get; private set; }
 
@@ -236,9 +247,6 @@ public class PlayerController : MonoBehaviour, IMoveable, IFerriable, IDamageabl
     {
         CurrentHealth -= damage;
         LastHitDirection = direction;
-
-        FX.UpdateHealthBar();
-
         if (CurrentHealth > 0)
         {
             Flinch();
@@ -262,7 +270,6 @@ public class PlayerController : MonoBehaviour, IMoveable, IFerriable, IDamageabl
         if (CurrentHealth > 0)
         {
             CurrentHealth = 0;
-            FX.UpdateHealthBar();
         }
         NotifyAnimationEventTriggered(AnimationTriggerType.DyingStart);
     }
