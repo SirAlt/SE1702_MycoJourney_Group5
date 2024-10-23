@@ -1,102 +1,90 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
-using UnityEngine.UIElements;
 
-public class DarkBall : MonoBehaviour 
+public class DarkBall : MonoBehaviour
 {
-    [SerializeField] private float speed =10f;
-    private float direction;
-    private bool hit;
-    private Animator  animator;
-    private BoxCollider2D boxCollider;
-    private float lifetime;
+    [SerializeField] private float speed = 10f;
     [SerializeField] private Transform target;
+    [SerializeField] private float lifetime;
+    [SerializeField] private float turnRate;
+    private float lifeTimer;
+    private BoxCollider2D boxCollider;
+    private Animator animator;
+    private Vector2 direction;
+    private bool hit;
     public BodyContacts BodyContacts { get; private set; }
-    // Start is called before the first frame update
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
         boxCollider = GetComponent<BoxCollider2D>();
-          BodyContacts = GetComponent<BodyContacts>();
-
+        BodyContacts = GetComponent<BodyContacts>();
     }
 
-
-    // Update is called once per frame
     void Update()
     {
         if (hit)
         {
             return;
         }
-        //Debug.Log("Speed: " + speed + " Direction: " + direction);
-        //float movementSpeed  = speed * Time.deltaTime * direction;
 
-        //transform.Translate(movementSpeed, 0, 0);
-        //lifetime += Time.deltaTime;
+        lifeTimer -= Time.deltaTime;
+
         if (target != null)
         {
-            if (BodyContacts.Ground || BodyContacts.Ceiling || BodyContacts.WallLeft|| BodyContacts.WallRight)
+            if (BodyContacts.Ground || BodyContacts.Ceiling || BodyContacts.Wall)
             {
-                animator.SetTrigger("explode");
-
-                hit = true;
-                boxCollider.enabled = false;
-                lifetime = 0; 
+                Explode();
             }
-            Vector3 direction = (target.position - transform.position).normalized; // Tính h??ng ??n nhân v?t
-            float movementSpeed = speed * Time.deltaTime; // Tính t?c ?? di chuy?n
-
-            transform.Translate(direction * movementSpeed); // Di chuy?n viên ??n theo h??ng ??n nhân v?t
-            float localScaleX = transform.localScale.x;
-            if (direction.x < 0)
-            {
-                localScaleX = -Mathf.Abs(localScaleX); // L?t viên ??n n?u di chuy?n sang trái
-            }
-            else
-            {
-                localScaleX = Mathf.Abs(localScaleX); // ??t l?i kích th??c theo h??ng ph?i
-            }
-            transform.localScale = new Vector3(localScaleX, transform.localScale.y, transform.localScale.z);
+            var direction = (target.position - transform.position).normalized;
+            var rotation = Quaternion.FromToRotation(transform.right, direction);
+            var targetRotation = rotation * transform.rotation;
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, turnRate);
+            float movementSpeed = speed * Time.deltaTime;
+            transform.Translate(Vector2.right * movementSpeed);
         }
-        if (lifetime > 2)
+        if (lifeTimer <= 0)
         {
-
-            gameObject.SetActive(false);
+            Explode();
         }
+    }
 
+    private void Explode()
+    {
+        animator.SetTrigger("explode");
+        hit = true;
+        boxCollider.enabled = false;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //Debug.Log("Collision detected with " + collision.name); // Ki
-        hit = true;
-        boxCollider.enabled = false;
-        animator.SetTrigger ("explode");
-       
+        Explode();
     }
-    public void SetDirection(float _direction)
-    {
-        lifetime = 0;
-        direction = _direction;
-        transform.position = new Vector3(transform.position.x, transform.position.y, 0);
 
+    public void SetDirection(Vector2 _direction)
+    {
+        lifeTimer = lifetime;
+        var direction = (target.position - transform.position).normalized;
+        var rotation = Quaternion.FromToRotation(transform.right, direction);
+        var targetRotation = rotation * transform.rotation;
+        
+        transform.SetPositionAndRotation(
+            new Vector3(transform.position.x, transform.position.y, 0),
+            Quaternion.RotateTowards(transform.rotation, targetRotation, 360f));
         gameObject.SetActive(true);
         hit = false;
         boxCollider.enabled = true;
-
-        float localScaleX = transform.localScale.x;
-        if(Mathf.Sign(localScaleX) != _direction)
+        if (direction.x < 0)
         {
-            localScaleX = -localScaleX;
+            transform.eulerAngles = new Vector3(0f, 180f, 0f);
         }
-        transform.localScale = new Vector3(localScaleX,transform.localScale.y, transform.localScale.z);
+        else
+        {
+            transform.eulerAngles = Vector3.zero;
+        }
     }
+    //animation event
     private void Deactive()
     {
-        gameObject.SetActive(false); 
+        gameObject.SetActive(false);
     }
 }
