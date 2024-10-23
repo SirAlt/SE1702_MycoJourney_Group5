@@ -1,19 +1,20 @@
 using Assets.Scripts;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class FlyingEye : Enemy ,IDamageable
+public class FlyingEye : Enemy
 {
     [SerializeField] private float flightSpeed = 2f;
     [SerializeField] private float waypointReachedDistance = 0.2f;
     [SerializeField] private List<Transform> waypoints;
     [SerializeField] private DetectionZone biteDetectionZone;
     [SerializeField] private EnemyFacing facing;
-    [SerializeField] private Attack attack; // Thêm thu?c tính Attack
-    private static readonly int AttackTrigger = Animator.StringToHash("Attack");
-    Animator animator;
-    Rigidbody2D rb;
+    [SerializeField] private Transform darkPoint;
+    [SerializeField] private GameObject[] darkballs;
 
+    private Animator animator;
+    private Rigidbody2D rb;
 
     public bool _hasTarget = false;
 
@@ -22,54 +23,54 @@ public class FlyingEye : Enemy ,IDamageable
 
     public BodyContacts BodyContacts { get; private set; }
 
-    // Start is called before the first frame update
-
     public bool HasTarget
     {
         get { return _hasTarget; }
-
         private set
         {
-
             _hasTarget = value;
             animator.SetBool(AnimationStrings.hasTarget, value);
-
         }
     }
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         facing = GetComponent<EnemyFacing>();
         BodyContacts = GetComponent<BodyContacts>();
-        attack = GetComponentInChildren<Attack>(); // L?y compon
     }
 
     private void Start()
     {
         nextWaypoint = waypoints[waypointNum];
     }
-  
 
     void Update()
     {
         if (biteDetectionZone != null)
         {
             HasTarget = biteDetectionZone.detectedColliders.Count > 0;
-            Debug.Log("Detected target: " + HasTarget);
+            //Debug.Log("Detected target: " + HasTarget);
 
             if (HasTarget)
             {
-                if (attack != null)
-                {
-                    attack.Activate();
-                    animator.Play("Attack",-1,0f);
+                // V? trí viên ??n
+                darkballs[FindDarkball()].transform.position = darkPoint.position;
+                darkballs[FindDarkball()].GetComponent<DarkBall>().SetDirection(Mathf.Sign(transform.localScale.x));
+                // D?ng chuy?n ??ng khi có m?c tiêu
+                rb.velocity = Vector2.zero;
 
-
-                }
-                else
+                // Quay m?t v? h??ng m?c tiêu
+                if (biteDetectionZone.detectedColliders.Count > 0)
                 {
-                    Debug.LogError("Attack component is not assigned.");
+                    Collider2D targetCollider = biteDetectionZone.detectedColliders[0]; // L?y collider ??u tiên
+                    Vector2 directionToTarget = (targetCollider.transform.position - transform.position).normalized;
+                    facing.FaceRight(); // N?u h??ng di chuy?n là bên ph?i
+                    if (directionToTarget.x < 0)
+                    {
+                        facing.FaceLeft(); // N?u h??ng di chuy?n là bên trái
+                    }
                 }
             }
         }
@@ -77,21 +78,27 @@ public class FlyingEye : Enemy ,IDamageable
         {
             Debug.LogWarning("biteDetectionZone is not assigned in the Inspector.");
         }
-
     }
-   
+
+    private int FindDarkball()
+    {
+        for (int i = 0; i < darkballs.Length; i++)
+        {
+            if (!darkballs[i].activeInHierarchy)
+            {
+                return i;
+            }
+        }
+        return 0;
+    }
+
     private void FixedUpdate()
     {
-
-        //    if (CanMove)
-        //{
-        //Flight();
-        //}
-
-        //Flight();
-
+        if (!HasTarget)
+        {
+            Flight();
+        }
     }
-
 
     private void Flight()
     {
@@ -106,25 +113,17 @@ public class FlyingEye : Enemy ,IDamageable
         {
             // N?u ch?m t??ng ho?c m?t ??t, quay l?i waypoint ??u tiên
             waypointNum = 0; // Quay l?i waypoint ??u tiên
-
-            // C?p nh?t waypoint ti?p theo
             nextWaypoint = waypoints[waypointNum];
-
-            // Tính toán l?i h??ng di chuy?n ??n waypoint m?i
             directionToWaypoint = (nextWaypoint.position - transform.position).normalized;
-
-            Debug.Log("Hit wall or ground. Moving to initial waypoint.");
         }
 
         // X? lý va ch?m v?i tr?n: ?i?u ch?nh h??ng bay xu?ng
         if (BodyContacts.Ceiling)
         {
-            // N?u ch?m tr?n, bay xu?ng
-            directionToWaypoint.y = -Mathf.Abs(directionToWaypoint.y); // Bay xu?ng t? t?
-            Debug.Log("Hit the ceiling. Changing direction to down.");
+            directionToWaypoint.y = -Mathf.Abs(directionToWaypoint.y); // Bay xu?ng t? trên
         }
 
-        // Xác ??nh h??ng ??i m?t d?a trên h??ng di chuy?n
+        // Xác ??nh h??ng di chuy?n
         if (directionToWaypoint.x < 0)
             facing.FaceLeft();
         else if (directionToWaypoint.x > 0)
@@ -137,12 +136,10 @@ public class FlyingEye : Enemy ,IDamageable
         if (distance <= waypointReachedDistance)
         {
             waypointNum++;
-
             if (waypointNum >= waypoints.Count)
             {
                 waypointNum = 0;
             }
-
             nextWaypoint = waypoints[waypointNum];
         }
     }

@@ -59,9 +59,9 @@ public class Attack : MonoBehaviour
         }
 
         // Never hit this target. Start tracking.
-        if (!hitObjects.ContainsKey(gameObject))
+        if (!hitObjects.ContainsKey(collision.gameObject))
         {
-            hitObjects.Add(gameObject, 0f);
+            hitObjects.Add(collision.gameObject, 0f);
         }
         // Already hit this target recently. Skip.
         else if (hitObjects[collision.gameObject] + damageTickCooldown > Time.time)
