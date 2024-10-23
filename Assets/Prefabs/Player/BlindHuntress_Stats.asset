@@ -25,7 +25,7 @@ MonoBehaviour:
   InitialJumpGravityModifier: 0
   InitialJumpPeriod: 0.1
   JumpEndEarlyGravityModifier: 3.5
-  JumpCutOffPoint: 0.02
+  JumpCutoffPoint: 0.02
   JumpEndEarlyWindow: 0.2
   JumpBuffer: 0.1
   JumpCooldown: 0.06
@@ -37,7 +37,7 @@ MonoBehaviour:
   GroundingVelocity: 15
   DropThroughInitialGracePeriod: 0.06
   CanMaintainDropThrough: 1
-  WallJumpCutOffPoint: 0.04
+  WallJumpCutoffPoint: 0.04
   WallJumpInitialPeriod: 0.12
   DashSpeed: 14
   DashDuration: 0.4
@@ -61,12 +61,13 @@ MonoBehaviour:
   GroundFlinchKnockbackSpeed: 7.5
   AirFlinchDuration: 0.6
   AirFlinchKnockbackDistance: 1.2
-  AirFlinchKnockbackSpeed: 3.6
+  AirFlinchKnockbackSpeed: 4.8
   AirFlinchKnockupSpeed: 10
   AirFlinchResidualKnockbackSpeedRatio: 0.2
   CanJumpRecoverFromFlinch: 1
-  FlinchRecoveryCutOffTime: 0.36
+  FlinchRecoveryCutoffTime: 0.36
   GetUpFrameCount: 6
+  InvincibleGetUp: 1
   PostDamageInvincibilityDuration: 2
   InvincibilityFlickerInterval: 0.1
   TransitionToDeathSafeguardTimeLimit: 5

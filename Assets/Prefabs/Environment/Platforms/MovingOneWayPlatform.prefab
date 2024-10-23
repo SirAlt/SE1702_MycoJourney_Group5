@@ -78,7 +78,7 @@ GameObject:
   - component: {fileID: 6643784245719820152}
   - component: {fileID: 3631116522513347975}
   m_Layer: 18
-  m_Name: Moving Platfrom_D
+  m_Name: MovingPlatfrom_Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -215,7 +215,7 @@ PolygonCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.5, y: 0.25}
+    oldSize: {x: 2, y: 0.33333334}
     newSize: {x: 1.5, y: 0.25}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -245,7 +245,7 @@ MonoBehaviour:
   waypoints:
   - {fileID: 5676188760308475560}
   - {fileID: 9023229436054388596}
-  MoveVector: {x: 0, y: 0}
+  pathEndBehavior: 1
 --- !u!1 &5484569331488642660
 GameObject:
   m_ObjectHideFlags: 0
@@ -271,7 +271,7 @@ Transform:
   m_GameObject: {fileID: 5484569331488642660}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2, y: 3, z: 0}
+  m_LocalPosition: {x: 5, y: 5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

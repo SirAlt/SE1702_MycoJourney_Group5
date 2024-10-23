@@ -226,8 +226,19 @@ public class PlayerController : MonoBehaviour, IMoveable, IFerriable, IDamageabl
 
     #region IDamageable
 
-    [field: SerializeField] public float MaxHealth { get; private set; }
-    public float CurrentHealth { get; private set; }
+    [field: SerializeField] public float MaxHealth { get; set; }
+
+    private float _currentHealth;
+    public float CurrentHealth
+    {
+        get => _currentHealth;
+        set
+        {
+            if (_currentHealth == value) return;
+            _currentHealth = Mathf.Clamp(value, 0, MaxHealth);
+            FX.UpdateHealthBar();
+        }
+    }
 
     public Vector2 LastHitDirection { get; private set; }
 
@@ -235,15 +246,10 @@ public class PlayerController : MonoBehaviour, IMoveable, IFerriable, IDamageabl
 
     public void TakeDamage(float damage, Vector2 direction)
     {
-        if (Hurtbox.HasInvincibility) return;
-
         CurrentHealth -= damage;
         CharacterEvents.characterDamaged?.Invoke(gameObject, damage);
         if (CurrentHealth <= 0)
         LastHitDirection = direction;
-
-        FX.UpdateHealthBar();
-
         if (CurrentHealth > 0)
         {
             Flinch();
@@ -267,7 +273,6 @@ public class PlayerController : MonoBehaviour, IMoveable, IFerriable, IDamageabl
         if (CurrentHealth > 0)
         {
             CurrentHealth = 0;
-            FX.UpdateHealthBar();
         }
         NotifyAnimationEventTriggered(AnimationTriggerType.DyingStart);
     }
@@ -347,8 +352,8 @@ public class PlayerController : MonoBehaviour, IMoveable, IFerriable, IDamageabl
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        if (Stats == null) Debug.LogWarning($"Please assign a {nameof(PlayerStats)} asset to the Player Controller's Stats slot", this);
-        if (Abilities == null) Debug.LogWarning($"Please assign a {nameof(PlayerAbilities)} asset to the Player Controller's Abilties slot", this);
+        if (Stats == null) Debug.LogWarning($"Please assign a {nameof(PlayerStats)} asset to the Player Controller's Stats slot of [ {gameObject.name} ].", this);
+        if (Abilities == null) Debug.LogWarning($"Please assign a {nameof(PlayerAbilities)} asset to the Player Controller's Abilties slot of [ {gameObject.name} ].", this);
     }
 #endif
 }

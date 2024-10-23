@@ -47,7 +47,7 @@ public class PlayerWallJumpState : PlayerJumpState
 
         var pastKickAwayPeriod =
             player.BodyContacts.Ceiling
-            || (jumpEndedEarly && player.TimeJumpStarted + player.Stats.WallJumpCutOffPoint <= Time.time)
+            || (jumpEndedEarly && player.TimeJumpStarted + player.Stats.WallJumpCutoffPoint <= Time.time)
             || player.TimeJumpStarted + player.Stats.WallJumpInitialPeriod <= Time.time;
         if (pastKickAwayPeriod)
         {

@@ -23,6 +23,6 @@ MonoBehaviour:
   DashLearnt: 1
   DashCooldown: 0.1
   AirDashCharges: 1
-  InvincibleDash: 0
+  InvincibleDash: 1
   RechargeDashesOnWall: 1
   SlashCooldown: 0.05
