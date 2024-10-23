@@ -1,3 +1,4 @@
+using Assets.Scripts.Player.Events;
 using System.Collections.Generic;
 using UnityEngine;
 

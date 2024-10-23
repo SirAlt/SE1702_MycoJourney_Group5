@@ -1,3 +1,4 @@
+using Assets.Scripts.Player.Events;
 using UnityEngine;
 using static UnityEditor.Experimental.GraphView.GraphView;
 
@@ -246,6 +247,8 @@ public class PlayerController : MonoBehaviour, IMoveable, IFerriable, IDamageabl
     public void TakeDamage(float damage, Vector2 direction)
     {
         CurrentHealth -= damage;
+        CharacterEvents.characterDamaged?.Invoke(gameObject, damage);
+        if (CurrentHealth <= 0)
         LastHitDirection = direction;
         if (CurrentHealth > 0)
         {

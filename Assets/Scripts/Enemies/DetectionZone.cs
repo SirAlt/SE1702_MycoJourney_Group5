@@ -12,6 +12,7 @@ public class DetectionZone : MonoBehaviour
     private void Awake()
     {
         col = GetComponent<Collider2D>();
+        col.isTrigger = true;
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
