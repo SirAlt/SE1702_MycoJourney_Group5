@@ -165,7 +165,7 @@ public class SmoothTileMovement : MonoBehaviour, IMovement
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        if (Configurations == null) Debug.LogWarning($"Please assign a {nameof(CollisionConfigs)} asset to the Movement script's Configurations slot", this);
+        if (Configurations == null) Debug.LogWarning($"Please assign a(n) {nameof(CollisionConfigs)} asset to the Movement script's Configurations slot of [ {gameObject.name} ].", this);
     }
 #endif
 }

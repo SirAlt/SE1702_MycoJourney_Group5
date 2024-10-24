@@ -37,7 +37,7 @@ public class PlayerFlinchState : PlayerState, IFlinchState
         if (stateMachine.Transitioning) return;
         if (player.Stats.CanJumpRecoverFromFlinch
             && (player.HasValidJumpInput || (player.Input.JumpHeld && !player.JumpOnCooldown))
-            && (player.TimeFlinchStarted + player.Stats.FlinchRecoveryCutOffTime <= Time.time))
+            && (player.TimeFlinchStarted + player.Stats.FlinchRecoveryCutoffTime <= Time.time))
         {
             if (player.Input.Move.y < 0) goto GET_UP;
             if (player.BodyContacts.Ground)
@@ -77,7 +77,7 @@ public class PlayerFlinchState : PlayerState, IFlinchState
         {
             frameKnockbackSpeed = (knockbackDistance - distanceKnockedBack) / Time.fixedDeltaTime;
         }
-        player.FrameVelocity.x = frameKnockbackSpeed * player.LastHitDirection.x;
+        player.FrameVelocity.x = frameKnockbackSpeed * Mathf.Sign(player.LastHitDirection.x);
         distanceKnockedBack += frameKnockbackSpeed * Time.fixedDeltaTime;
     }
 

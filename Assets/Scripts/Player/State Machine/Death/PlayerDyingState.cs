@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class PlayerDyingState : PlayerState
+public class PlayerDyingState : PlayerDeathState, IDeathState
 {
     private bool _animCompleted;
     private float _safeguardTimer;
@@ -17,7 +17,6 @@ public class PlayerDyingState : PlayerState
         _safeguardTimer = 0f;
 
         if (player.BodyContacts.Ground) player.FrameVelocity.x = 0f;
-        player.Hurtbox.enabled = false;
 
         player.FX.StopAllEffects();
         player.Animator.Play(PlayerController.DyingAnim, -1, 0f);
@@ -29,7 +28,7 @@ public class PlayerDyingState : PlayerState
         {
             if (player.BodyContacts.Ground || _safeguardTimer >= player.Stats.TransitionToDeathSafeguardTimeLimit)
             {
-                stateMachine.ChangeState(player.DeathState);
+                stateMachine.ChangeState(player.DeadState);
                 return;
             }
             _safeguardTimer += Time.fixedDeltaTime;

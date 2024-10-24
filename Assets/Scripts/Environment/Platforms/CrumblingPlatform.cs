@@ -61,7 +61,7 @@ public class CrumblingPlatform : MonoBehaviour
         _anim.Play(ReformAnim, -1, 0f);
     }
 
-    // AnimEvent: Break [Frame 2]
+    // AnimEvent: Break [2]
     public void FootingGone()
     {
         _collision.enabled = false;

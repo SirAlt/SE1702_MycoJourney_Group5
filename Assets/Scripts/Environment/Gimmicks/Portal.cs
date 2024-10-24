@@ -14,7 +14,7 @@ public class Portal : MonoBehaviour
 
         if (_justPortaledObjects.Contains(collision.gameObject)) return;
 
-        if (destination.gameObject.TryGetComponent<Portal>(out var destPortal))
+        if (destination.TryGetComponent<Portal>(out var destPortal))
         {
             destPortal._justPortaledObjects.Add(collision.gameObject);
         }

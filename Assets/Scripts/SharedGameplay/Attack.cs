@@ -1,17 +1,20 @@
 using System.Collections.Generic;
 using UnityEngine;
+using static IHitReceptor;
 
 [RequireComponent(typeof(Collider2D))]
 public class Attack : MonoBehaviour
 {
     [SerializeField] protected LayerMask attackableLayers;
     [SerializeField] protected float damage;
-    [SerializeField] protected float damageTickCooldown;
+    [SerializeField] protected float damageTickCooldown = 0.2f;
+    [SerializeField] protected HitAttributes hitAttributes;
 
     // Intentional "bug" where the attack deals damage again if the target leaves then re-enters its hitbox.
     [SerializeField] private bool repeatedHitBug;
 
-    protected readonly Dictionary<GameObject, float> hitObjects = new();
+    // Stores the last point in time the attack connected, for each individual target.
+    protected readonly Dictionary<GameObject, float> lastHitTimes = new();
 
     protected Collider2D hitbox;
 
@@ -33,7 +36,7 @@ public class Attack : MonoBehaviour
     public void SetActive(bool active)
     {
         hitbox.enabled = active;
-        hitObjects.Clear();
+        lastHitTimes.Clear();
     }
 
     protected void OnTriggerEnter2D(Collider2D collision)
@@ -57,20 +60,14 @@ public class Attack : MonoBehaviour
             return;
         }
 
-        // Never hit this target. Start tracking.
-        if (!hitObjects.ContainsKey(gameObject))
-        {
-            hitObjects.Add(gameObject, 0f);
-        }
-        // Already hit this target recently. Skip.
-        else if (hitObjects[collision.gameObject] + damageTickCooldown > Time.time)
+        if (lastHitTimes.TryGetValue(collision.gameObject, out var timeTargetLastHit)
+           && timeTargetLastHit + damageTickCooldown > Time.time)
         {
             return;
         }
-        hitObjects[collision.gameObject] = Time.time;
+        lastHitTimes[collision.gameObject] = Time.time;
 
-
-        if (collision.transform.parent.TryGetComponent<IDamageable>(out var target))
+        if (collision.TryGetComponent<IHitReceptor>(out var target))
         {
             var hitDirection = GetHitDirection(collision);
             DealDamage(target, hitDirection);
@@ -82,8 +79,8 @@ public class Attack : MonoBehaviour
         return (target.transform.position - transform.position).normalized;
     }
 
-    protected virtual void DealDamage(IDamageable target, Vector2 hitDirection)
+    protected virtual void DealDamage(IHitReceptor target, Vector2 force)
     {
-        target.TakeDamage(damage, hitDirection);
+        target.TakeHit(damage, force, hitAttributes);
     }
 }

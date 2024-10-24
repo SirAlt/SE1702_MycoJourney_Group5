@@ -1,101 +1,106 @@
-using Assets.Scripts;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class FlyingEye : MonoBehaviour
+public class FlyingEye : Enemy
 {
-    [SerializeField] private float flightSpeed = 2f;
-    [SerializeField] private float waypointReachedDistance = 0.2f;
-    [SerializeField] private List<Transform> waypoints;
-    [SerializeField] private DetectionZone biteDetectionZone;
-    [SerializeField] private EnemyFacing facing;
+    [SerializeField] private DetectionZone detector;
+    [SerializeField] private Transform darkPoint;
+    [SerializeField] private GameObject[] darkballs;
+    [SerializeField] private float attackCooldown;
+    [SerializeField] private int barrageSize;
+    [SerializeField] private float barrageDelay;
 
-    Animator animator;
-    Rigidbody2D rb;
+    private Animator _anim;
+    private EnemyFacing _facing;
+    private WaypointMover _mover;
 
-    public bool _hasTarget = false;
+    private float _attackTimer;
+    private Transform _target;
 
-    Transform nextWaypoint;
-    int waypointNum = 0;
-
-    // Start is called before the first frame update
-
+    private bool _hasTarget;
     public bool HasTarget
     {
-        get { return _hasTarget; }
-
+        get => _hasTarget;
         private set
         {
-
             _hasTarget = value;
-            animator.SetBool(AnimationStrings.hasTarget, value);
-
+            _anim.SetBool(Constants.hasTarget, value);
         }
     }
+
     private void Awake()
     {
-        animator = GetComponent<Animator>();
-        rb = GetComponent<Rigidbody2D>();
-        facing = GetComponent<EnemyFacing>();
+        _anim = GetComponent<Animator>();
+        _facing = GetComponent<EnemyFacing>();
+        _mover = GetComponent<WaypointMover>();
     }
 
-    private void Start()
+    private void Update()
     {
-        nextWaypoint = waypoints[waypointNum];
+        _attackTimer -= Time.deltaTime;
+        HasTarget = detector.detectedColliders.Count > 0;
+        if (HasTarget)
+        {
+            _mover.enabled = false;
+            _target = detector.detectedColliders[0].transform;
+
+            var directionToTarget = (_target.position - transform.position).normalized;
+            if (directionToTarget.x < 0)
+                _facing.FaceLeft();
+            else
+                _facing.FaceRight();
+
+            if (_attackTimer <= 0)
+            {
+                _attackTimer = attackCooldown;
+                for (int i = 0; i < barrageSize; i++)
+                {
+                    Invoke(nameof(Fire), barrageDelay * i);
+                }
+            }
+        }
+        else
+        {
+            _mover.enabled = true;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Fire()
     {
-        //HasTarget = biteDetectionZone.detectedColliders.Count > 0;
-
-
+        var darkball = FindDarkball();
+        darkballs[darkball].transform.position = darkPoint.position;
+        darkballs[darkball].GetComponent<DarkBall>().Launch(_target);
     }
-    //public bool CanMove
-    //{
-    //    get
-    //    {
-    //        return animator.GetBool(AnimationStrings.canMove);
-    //    }
-    //}
+
+    private int FindDarkball()
+    {
+        for (int i = 0; i < darkballs.Length; i++)
+        {
+            if (!darkballs[i].activeInHierarchy)
+            {
+                return i;
+            }
+        }
+        return 0;
+    }
+
     private void FixedUpdate()
     {
-
-        //    if (CanMove)
-        //{
-        //Flight();
-        //}
-
-        Flight();
-
+        UpdateFacing();
     }
 
-
-    private void Flight()
+    private void UpdateFacing()
     {
-        Vector2 directionToWaypoint = (nextWaypoint.position - transform.position).normalized;
-
-        if (directionToWaypoint.x < 0) facing.FaceLeft();
-        else facing.FaceRight();
-
-        float distance = Vector2.Distance(nextWaypoint.position, transform.position);
-
-        rb.velocity = directionToWaypoint * flightSpeed;
-        //Debug.Log("Current Position: " + transform.position);
-
-
-        if (distance <= waypointReachedDistance)
-        {
-            waypointNum++;
-
-            if (waypointNum >= waypoints.Count)
-            {
-                waypointNum = 0;
-            }
-
-            nextWaypoint = waypoints[waypointNum];
-            //Debug.Log("Updated Next Waypoint: " + nextWaypoint.position);
-        }
-
+        if (HasTarget) return;
+        if (_mover.MoveVector.x < 0)
+            _facing.FaceLeft();
+        else
+            _facing.FaceRight();
     }
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (detector == null) Debug.LogWarning($"No {nameof(DetectionZone)} assigned for [ {gameObject.name} ].");
+    }
+#endif
 }

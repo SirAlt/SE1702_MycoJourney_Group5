@@ -1,34 +1,18 @@
-﻿using UnityEngine;
-
-public class PlayerDeathState : PlayerState
+﻿public abstract class PlayerDeathState : PlayerState
 {
-    public PlayerDeathState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine)
+    protected PlayerDeathState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
     }
 
     public override void EnterState()
     {
         base.EnterState();
-        player.FrameVelocity = Vector2.zero;
-        player.Animator.Play(PlayerController.DeathAnim, -1, 0f);
+        player.Hurtbox.Collider.enabled = false;
     }
 
-    public override void CheckForTransition()
+    public override void ExitState()
     {
-        // No. Unless... we later implement revive.
-    }
-
-    public override void PhysicsUpdate()
-    {
-        // No.
-    }
-
-    public override void OnAnimationEventTriggered(PlayerController.AnimationTriggerType triggerType)
-    {
-        if (triggerType == PlayerController.AnimationTriggerType.DeathComplete)
-        {
-            player.PromptRetry();
-            return;
-        }
+        base.ExitState();
+        player.Hurtbox.Collider.enabled = true;
     }
 }

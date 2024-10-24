@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,7 +15,7 @@ public class DisappearingPlatformCoordinator : MonoBehaviour
     {
         if (platformSets.Count == 0) return;
 
-        numberOfActiveSets = Clamp(numberOfActiveSets);
+        numberOfActiveSets = Math.Clamp(numberOfActiveSets, 0, platformSets.Count);
         for (int i = 0; i < numberOfActiveSets; i++)
         {
             platformSets[i].SetActive(true);
@@ -46,7 +47,7 @@ public class DisappearingPlatformCoordinator : MonoBehaviour
     {
         if (platformSets.Count == 0)
         {
-            Debug.LogWarning("No platform set has been assigned to the disappearing platform coordinator.");
+            Debug.LogWarning($"No platform set has been assigned to the disappearing platform coordinator of [ {gameObject.name} ].");
         }
     }
 #endif

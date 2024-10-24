@@ -447,8 +447,8 @@ MonoBehaviour:
   attackableLayers:
     serializedVersion: 2
     m_Bits: 4096
-  damage: 12
-  damageTickCooldown: 0
+  damage: 10
+  damageTickCooldown: 0.2
   repeatedHitBug: 0
 --- !u!1 &1493992146345326285
 GameObject:
@@ -543,8 +543,8 @@ MonoBehaviour:
   attackableLayers:
     serializedVersion: 2
     m_Bits: 4096
-  damage: 6
-  damageTickCooldown: 0
+  damage: 8
+  damageTickCooldown: 0.2
   repeatedHitBug: 0
 --- !u!1 &5921916025187759805
 GameObject:
@@ -633,9 +633,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5921916025187759805}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: caaa69c053d6c234b8e330eee8a76229, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e7873e6671fad9488152e5cca6add6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _configs: {fileID: 11400000, guid: 3de58c58ef036d44585bbb773caab929, type: 2}
 --- !u!1 &6786179279400670461
 GameObject:
   m_ObjectHideFlags: 0
@@ -729,8 +730,8 @@ MonoBehaviour:
   attackableLayers:
     serializedVersion: 2
     m_Bits: 4096
-  damage: 4
-  damageTickCooldown: 0
+  damage: 5
+  damageTickCooldown: 0.2
   repeatedHitBug: 0
 --- !u!1 &7182978655249773461
 GameObject:
@@ -825,8 +826,8 @@ MonoBehaviour:
   attackableLayers:
     serializedVersion: 2
     m_Bits: 4096
-  damage: 5
-  damageTickCooldown: 0
+  damage: 8
+  damageTickCooldown: 0.2
   repeatedHitBug: 0
 --- !u!1 &8456569474857873164
 GameObject:
